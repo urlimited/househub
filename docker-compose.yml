@@ -1,0 +1,76 @@
+version: "3.9"  # optional since v1.27.0
+services:
+
+  #PHP API_GATEWAY
+  househub_monolith_mvp:
+    build:
+      context: .
+      dockerfile: deployment/dockers/househub_monolith_mvp.dockerfile
+    image: househub_monolith_mvp
+    container_name: househub_monolith_mvp
+    restart: on-failure
+    tty: true
+    environment:
+      SERVICE_NAME: househub_monolith_mvp
+      SERVICE_TAGS: dev
+      XDEBUG_ENABLED: 1
+      XDEBUG_REMOTE_AUTOSTART: 1
+      XDEBUG_MAXNESTING_LEVEL: 1000
+      XDEBUG_REMOTE_CONNECT_BACK: 1
+      XDEBUG_REMOTE_HOST: host.docker.internal
+      PHP_IDE_CONFIG: serverName=localhost
+    working_dir: /var/www/househub_monolith_mvp
+    volumes:
+      - ./househub_monolith_mvp/:/var/www/househub_monolith_mvp
+    networks:
+      - app-network
+
+  #Nginx Service
+  househub_webserver:
+    build:
+      context: .
+      dockerfile: deployment/dockers/nginx.dockerfile
+    image: nginx
+    container_name: househub_webserver
+    #restart: unless-stopped
+    tty: true
+    environment:
+      SERVICE_NAME: househub_webserver
+      SERVICE_TAGS: dev
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./:/var/www
+    networks:
+      - app-network
+
+  #MySQL Service courses
+  mysql_househub:
+    image: mysql:8.0.23
+    container_name: mysql_househub
+    #restart: unless-stopped
+    tty: true
+    ports:
+      - "3307:3306"
+    command: --init-file /data/application/init.sql
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql_househub
+    volumes:
+      - dbdata_househub:/var/lib/mysql/
+      #- ./mysql/my.cnf:/etc/mysql/my.cnf
+      - ./deployment/configs/mysql_househub_init.sql:/data/application/init.sql
+    networks:
+      - app-network
+
+#Docker Networks
+networks:
+  app-network:
+    driver: bridge
+
+#Volumes
+volumes:
+  dbdata_househub:
+    driver: local
