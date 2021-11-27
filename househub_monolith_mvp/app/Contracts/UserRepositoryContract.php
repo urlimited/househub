@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Interfaces;
+namespace App\Contracts;
 
 use App\Models\User;
 
-interface UserRepositoryInterface
+interface UserRepositoryContract
 {
     public function create(array $data): User;
     public function update(): User;

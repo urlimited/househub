@@ -2,60 +2,58 @@
 
 namespace App\Repositories;
 
-use App\Interfaces\UserRepositoryInterface;
+use App\Contracts\UserRepositoryContract;
 use App\Models\User;
-use Illuminate\Support\Facades\DB;
+use App\Repositories\Entities\ContactInformation;
+use App\Repositories\Entities\User as UserEntity;
+use App\Repositories\Entities\UserStatusHistory;
+use Illuminate\Support\Str;
 
-class UserRepository implements UserRepositoryInterface
+class UserRepository implements UserRepositoryContract
 {
 
     public function create(array $data): User
     {
-        $usersTableData = collect($data)
-            ->filter(function($value, $key){
-                return in_array($key, [
-                    'first_name',
-                    'last_name',
-                    'login',
-                    'password',
-                    'role_id'
-                ]);
-            })->toArray();
+        $dataProcessed = collect($data)->reduce(function($accum, $nextValue, $nextKey){
+            return array_merge($accum, [Str::snake($nextKey) => $nextValue]);
+        }, []);
 
-        $statusHistoryTableData = collect($data)
-            ->filter(function($value, $key){
-                return $key == 'status';
-            })->toArray();
+        $dataProcessed['user_id'] = UserEntity::create($dataProcessed)->id;
 
-        $contactInformationTableData = collect($data)
-            ->filter(function(){
-                return in_array($key, );
-            })->toArray();
+        UserStatusHistory::create($dataProcessed);
+        foreach($dataProcessed['contact_information'] as $info) {
+            ContactInformation::create(array_merge($info, ['user_id' => $dataProcessed['user_id']]));
+        }
 
-        DB::table('users')->insert($usersTableData);
+        $dataProcessed['id'] = $dataProcessed['user_id'];
 
-        DB::table('user_status_histories')->insert($statusHistoryTableData);
-
-        return new User($data);
+        return new User($dataProcessed);
     }
 
-    public function update()
+    public function update(): User
     {
         // TODO: Implement update() method.
+
+        return new User();
     }
 
-    public function softDelete()
+    public function softDelete(): User
     {
         // TODO: Implement softDelete() method.
+
+        return new User();
     }
 
-    public function delete()
+    public function delete(): User
     {
         // TODO: Implement delete() method.
+
+        return new User();
     }
 
-    public function find()
+    public function find(): User
     {
+        return new User();
         // TODO: Implement find() method.
     }
 }
