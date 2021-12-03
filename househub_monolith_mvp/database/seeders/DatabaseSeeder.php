@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
             //UserStatusSeeder::class,
             //RoleSeeder::class,
             //ContactInformationTypeSeeder::class,
+            //AuthCodeTypesSeeder::class,
         ]);
     }
 }
