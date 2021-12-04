@@ -4,9 +4,10 @@ namespace App\Repositories;
 
 use App\Contracts\UserRepositoryContract;
 use App\Models\User;
-use App\Repositories\Entities\ContactInformation;
-use App\Repositories\Entities\User as UserEntity;
-use App\Repositories\Entities\UserStatusHistory;
+use App\Repositories\Entities\BaseModel;
+use App\Repositories\Entities\ContactInformationEntity;
+use App\Repositories\Entities\UserEntity as UserEntity;
+use App\Repositories\Entities\UserStatusHistoryEntity;
 use Illuminate\Support\Str;
 
 class UserRepository implements UserRepositoryContract
@@ -20,9 +21,9 @@ class UserRepository implements UserRepositoryContract
 
         $dataProcessed['user_id'] = UserEntity::create($dataProcessed)->id;
 
-        UserStatusHistory::create($dataProcessed);
+        UserStatusHistoryEntity::create($dataProcessed);
         foreach($dataProcessed['contact_information'] as $info) {
-            ContactInformation::create(array_merge($info, ['user_id' => $dataProcessed['user_id']]));
+            ContactInformationEntity::create([...$info, 'user_id' => $dataProcessed['user_id']]);
         }
 
         $dataProcessed['id'] = $dataProcessed['user_id'];

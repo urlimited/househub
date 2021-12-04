@@ -2,9 +2,7 @@
 
 namespace App\Repositories\Entities;
 
-use Illuminate\Database\Eloquent\Model;
-
-class Permission extends Model
+class PermissionEntity extends BaseModel
 {
     public $timestamps = false;
 

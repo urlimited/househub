@@ -2,9 +2,7 @@
 
 namespace App\Repositories\Entities;
 
-use Illuminate\Database\Eloquent\Model;
-
-class Role extends Model
+class RoleEntity extends BaseModel
 {
     public $timestamps = false;
 

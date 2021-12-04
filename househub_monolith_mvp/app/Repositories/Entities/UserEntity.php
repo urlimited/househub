@@ -2,13 +2,10 @@
 
 namespace App\Repositories\Entities;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Hash;
-
 /**
  * @method static create(array $data)
  */
-class User extends Model
+class UserEntity extends BaseModel
 {
     public $timestamps = false;
 

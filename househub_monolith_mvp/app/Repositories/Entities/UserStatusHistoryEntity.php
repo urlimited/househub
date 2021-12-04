@@ -2,12 +2,10 @@
 
 namespace App\Repositories\Entities;
 
-use Illuminate\Database\Eloquent\Model;
-
 /**
  * @method static create(array $data)
  */
-class UserStatusHistory extends Model
+class UserStatusHistoryEntity extends BaseModel
 {
     public $timestamps = false;
 

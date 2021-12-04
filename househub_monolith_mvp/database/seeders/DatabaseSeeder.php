@@ -14,10 +14,10 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call([
-            //UserStatusSeeder::class,
-            //RoleSeeder::class,
-            //ContactInformationTypeSeeder::class,
-            //AuthCodeTypesSeeder::class,
+            UserStatusSeeder::class,
+            RoleSeeder::class,
+            ContactInformationTypeSeeder::class,
+            AuthCodeTypesSeeder::class,
         ]);
     }
 }

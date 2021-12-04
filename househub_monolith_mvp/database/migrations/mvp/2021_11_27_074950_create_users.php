@@ -15,10 +15,10 @@ class CreateUsers extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->unsignedInteger('id')->autoIncrement();
-            $table->string('first_name');
-            $table->string('last_name');
+            $table->string('first_name')->nullable();
+            $table->string('last_name')->nullable();
             $table->string('login')->unique();
-            $table->string('password');
+            $table->string('password')->nullable();
             $table->unsignedInteger('role_id')->default(1);
 
             $table->foreign('role_id')->references('id')->on('roles')->onDelete('set default');
