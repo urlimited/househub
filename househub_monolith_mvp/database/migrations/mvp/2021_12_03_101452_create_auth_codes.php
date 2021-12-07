@@ -18,10 +18,12 @@ class CreateAuthCodes extends Migration
             $table->string('code')->nullable(false);
             $table->unsignedInteger('type_id')->nullable(false);
             $table->unsignedInteger('user_id')->nullable(false);
+            $table->unsignedInteger('notificator_id')->nullable(false);
             $table->timestamp('saved_at')->nullable(false)->useCurrent();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('type_id')->references('id')->on('auth_code_types');
+            $table->foreign('notificator_id')->references('id')->on('notificators');
 
             $table->index('user_id');
         });
