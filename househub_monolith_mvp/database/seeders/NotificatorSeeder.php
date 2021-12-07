@@ -27,7 +27,7 @@ class NotificatorSeeder extends Seeder
         ];
 
         foreach ($notificators as $type) {
-            DB::table('notificator_types')->insert([
+            DB::table('notificators')->insert([
                 'name' => $type
             ]);
         }

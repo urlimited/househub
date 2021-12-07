@@ -18,6 +18,8 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             ContactInformationTypeSeeder::class,
             AuthCodeTypesSeeder::class,
+            NotificatorTypeSeeder::class,
+            NotificatorSeeder::class,
         ]);
     }
 }
