@@ -52,9 +52,16 @@ class UserRepository implements UserRepositoryContract
         return new User();
     }
 
-    public function find(): User
+    public function find(int $id): User
     {
-        return new User();
-        // TODO: Implement find() method.
+        $userData = UserEntity::findOrFail($id);
+
+        $statusData = UserStatusHistoryEntity::findByUserId($id);
+
+        return new User([
+            ...$userData,
+            'phone' => $userData['login'],
+            'status_id' => $statusData->id
+        ]);
     }
 }

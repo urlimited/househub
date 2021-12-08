@@ -4,6 +4,7 @@ namespace App\Repositories\Entities;
 
 /**
  * @method static create(array $data)
+ * @method static findOrFail(int $id)
  */
 class UserEntity extends BaseModel
 {

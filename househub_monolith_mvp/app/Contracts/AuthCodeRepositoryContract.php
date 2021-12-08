@@ -11,4 +11,5 @@ interface AuthCodeRepositoryContract
     public function softDelete(): AuthCode;
     public function delete(): AuthCode;
     public function find(): AuthCode;
+    public function getAllAttemptsForUser(): array;
 }

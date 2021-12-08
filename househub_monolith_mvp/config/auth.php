@@ -95,6 +95,10 @@ return [
         ],
     ],
 
+    'phone_confirmation' => [
+        'max_attempts' => 10
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Password Confirmation Timeout

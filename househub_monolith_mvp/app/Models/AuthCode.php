@@ -2,29 +2,24 @@
 
 namespace App\Models;
 
-use App\Enums\AuthCodeType;
+use App\Contracts\NotificatorRepositoryContract;
 use JetBrains\PhpStorm\ArrayShape;
 use JetBrains\PhpStorm\NoReturn;
 
-final class AuthCode
+abstract class AuthCode
 {
     #[NoReturn]
     public function __construct(
         public string $code,
-        private int $userId,
-        private int $typeId,
-        private ?int $id = null
+        protected int $userId,
+        protected int $typeId,
+        protected int $notificator_id,
+        protected ?int $id = null
     ){
 
     }
 
-    public static function generate($userId): AuthCode{
-        return new AuthCode(
-            code: rand(1111, 9999),
-            userId: $userId,
-            typeId: AuthCodeType::phone
-        );
-    }
+    public abstract static function generate(int $userId, array $sourceList = []): AuthCode;
 
     public function publish(){
 
@@ -40,11 +35,17 @@ final class AuthCode
         $result = [
             'code' => $this->code,
             'user_id' => $this->userId,
-            'type_id' => $this->typeId
+            'type_id' => $this->typeId,
+            'notificator_id' => $this->notificator_id
         ];
 
         $this->id !== null && $result['id'] = $this->id;
 
         return $result;
+    }
+
+    public function getNotificator(): Notificator
+    {
+        return app()->make(NotificatorRepositoryContract::class)->find($this->notificator_id);
     }
 }

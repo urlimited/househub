@@ -3,17 +3,25 @@
 namespace App\UseCases;
 
 use App\Contracts\AuthCodeRepositoryContract;
+use App\Contracts\NotificatorRepositoryContract;
 use App\Contracts\UserRepositoryContract;
 use App\Enums\ContactInformationType;
 use App\Enums\Role;
 use App\Enums\UserStatus;
-use App\Models\AuthCode;
+use App\Exceptions\AllNotificatorsUsedException;
+use App\Models\CallAuthCode;
+use Exception;
 use Illuminate\Contracts\Container\BindingResolutionException;
+use Illuminate\Queue\MaxAttemptsExceededException;
+use JetBrains\PhpStorm\ArrayShape;
+use Twilio\Exceptions\ConfigurationException;
+use Twilio\Exceptions\TwilioException;
 
 final class RegisterUseCase
 {
     private UserRepositoryContract $userRepository;
     private AuthCodeRepositoryContract $authCodeRepository;
+    private NotificatorRepositoryContract $notificatorRepository;
 
     /**
      * @throws BindingResolutionException
@@ -22,27 +30,64 @@ final class RegisterUseCase
     {
         $this->userRepository = app()->make(UserRepositoryContract::class);
         $this->authCodeRepository = app()->make(AuthCodeRepositoryContract::class);
+        $this->notificatorRepository = app()->make(NotificatorRepositoryContract::class);
     }
 
     /**
-     * Creates a new user, after that generates and sends the authentication code to him
+     * Creates a new user
      * @param array $userData
+     * @return array
      */
+    #[ArrayShape([0 => "array", 'role' => "string", 'status' => "mixed"])]
     public function registerResidentUser(array $userData): array
     {
-        // Create a new user
-        $processedUserData = $this->prepareDataForRegisterResidentUser($userData);
-
-        $user = $this->userRepository->create($processedUserData);
-
-        // Generate and send code to the user
-        $this->authCodeRepository->create(AuthCode::generate($user->id)->toDB());
+        $user = $this->userRepository->create($this->prepareDataForRegisterResidentUser($userData));
 
         return $user->publish();
     }
 
+    /**
+     * @param array $userData
+     * @return UseCaseResult
+     * @throws Exception
+     * @throws MaxAttemptsExceededException
+     */
+    public function sendAuthenticationCall(array $userData): UseCaseResult
+    {
+        if(!array_key_exists('id', $userData))
+            throw new Exception("Key id is not found in userData");
+
+        try{
+            $user = $this->userRepository->find($userData['id']);
+
+            if($this->authCodeRepository->getAllAttemptsForUser() === config('auth.phone_confirmation.max_attempts')){
+                //TODO: ban the user
+
+                throw new MaxAttemptsExceededException();
+            }
+
+
+            $phone = $this->authCodeRepository->create(
+                CallAuthCode::generate(
+                    userId: $user->id,
+                    sourceList: $this->notificatorRepository->getNotUsedNotificatorsBy($user->id)
+                )->toDB()
+            )->getNotificator()->value;
+
+            $user->callNotify($phone);
+
+            return new UseCaseResult(status: UseCaseResult::StatusSuccess);
+        } catch (TwilioException|ConfigurationException $exception) {
+            // TODO: handle twilio cash shortage
+            return new UseCaseResult(status: UseCaseResult::StatusFail, message: "configuration error");
+        } catch (AllNotificatorsUsedException $exception) {
+            return new UseCaseResult(status: UseCaseResult::StatusFail, message: "all phones are out, wait 5 minutes");
+        }
+    }
+
     // TODO: [SRP] remove this into different class
-    private function prepareDataForRegisterResidentUser(array $data): array {
+    private function prepareDataForRegisterResidentUser(array $data): array
+    {
         $processedUserData = $data;
 
         $processedUserData['role_id'] = Role::resident;
@@ -57,7 +102,7 @@ final class RegisterUseCase
             ]
         ];
 
-        if(array_key_exists('email', $data))
+        if (array_key_exists('email', $data))
             $processedUserData['contact_information'][] = [
                 'type_id' => ContactInformationType::email,
                 'value' => $data['email']

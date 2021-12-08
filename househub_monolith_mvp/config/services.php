@@ -31,7 +31,10 @@ return [
     ],
 
     'twilio' => [
-        ''
+        'sid' => env('TWILIO_ACCOUNT_SID'),
+        'auth_token' => env('TWILIO_AUTH_CODE'),
+        'time_limit' => 6,
+        'timeout' => 1,
     ]
 
 ];

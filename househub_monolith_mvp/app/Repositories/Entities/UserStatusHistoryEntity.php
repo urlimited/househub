@@ -2,10 +2,17 @@
 
 namespace App\Repositories\Entities;
 
+use Carbon\Carbon;
+
 /**
  * @method static create(array $data)
+ * @method static where(array $data)
+ * @property int $id
+ * @property int $user_id
+ * @property int $status_id
+ * @property Carbon $saved_at
  */
-class UserStatusHistoryEntity extends BaseModel
+final class UserStatusHistoryEntity extends BaseModel
 {
     public $timestamps = false;
 
@@ -17,4 +24,14 @@ class UserStatusHistoryEntity extends BaseModel
         'status_id',
         'saved_at'
     ];
+
+    protected $casts = [
+        'saved_at' => 'datetime',
+    ];
+
+    public static function findByUserId(int $userId): self{
+        return self::where(['user_id' => $userId])
+            ->orderBy('saved_at', 'desc')
+            ->first();
+    }
 }

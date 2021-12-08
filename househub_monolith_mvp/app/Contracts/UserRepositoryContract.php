@@ -10,5 +10,5 @@ interface UserRepositoryContract
     public function update(): User;
     public function softDelete(): user;
     public function delete(): User;
-    public function find(): User;
+    public function find(int $id): User;
 }

@@ -8,16 +8,13 @@ use DateTime;
  * @method static create(array $data)
  * @method static where()
  */
-final class AuthCodeEntity extends BaseModel
+final class NotificatorEntity extends BaseModel
 {
-    protected $table = 'auth_codes';
+    protected $table = 'notificators';
 
     protected $fillable = [
         'id',
-        'user_id',
         'type_id',
-        'notificator_id',
-        'code',
-        'sentAt'
+        'value'
     ];
 }

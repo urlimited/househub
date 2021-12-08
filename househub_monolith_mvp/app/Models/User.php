@@ -5,6 +5,9 @@ namespace App\Models;
 use App\Enums\Role;
 use App\Enums\UserStatus;
 use JetBrains\PhpStorm\ArrayShape;
+use Twilio\Exceptions\ConfigurationException;
+use Twilio\Exceptions\TwilioException;
+use Twilio\Rest\Client;
 
 class User
 {
@@ -37,5 +40,27 @@ class User
             'role' => Role::getKey($this->role_id),
             'status' => UserStatus::getKey($this->status_id),
         ];
+    }
+
+    /**
+     * @throws ConfigurationException
+     * @throws TwilioException
+     */
+    public function callNotify(string $fromPhone){
+        $sid    = config('services.twilio.sid');
+        $token  = config('services.twilio.auth_token');
+        $twilio = new Client($sid, $token);
+
+        $message = $twilio->calls
+            ->create($this->phone,
+                $fromPhone,
+                [
+                    "url" => "http://demo.twilio.com/docs/voice.xml",
+                    "timeLimit" => config('services.twilio.time_limit'),
+                    "timeout" => config('services.twilio.timeout')
+                ]
+            );
+
+        print($message->sid);
     }
 }

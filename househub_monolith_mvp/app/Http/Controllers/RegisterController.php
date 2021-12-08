@@ -2,21 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\RegisterResidentUser;
+use App\Http\Requests\SendConfirmationPhoneCall;
 use App\UseCases\RegisterUseCase;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
+use Illuminate\Queue\MaxAttemptsExceededException;
 
-class RegisterController extends Controller
+final class RegisterController extends Controller
 {
-    public function registerResidentUser(RegisterResidentUser $request): JsonResponse
+    public function registerResidentUser(SendConfirmationPhoneCall $request): JsonResponse
     {
-        if($request->header('Content-Type') !== 'application/json')
-            return response()->json(data: [
-                'errors' => [
-                    'header' => 'Content-Type must be application/json'
-                ]
-            ], status: 422);
+        $this->validateIsHeaderContentTypeApplicationJSON($request);
 
         $useCase = new RegisterUseCase();
 
@@ -25,5 +20,29 @@ class RegisterController extends Controller
         ];
 
         return response()->json(data: $result, status: 200);
+    }
+
+    public function sendConfirmationPhoneCall(SendConfirmationPhoneCall $request): JsonResponse
+    {
+        $this->validateIsHeaderContentTypeApplicationJSON($request);
+
+        try{
+            $useCase = new RegisterUseCase();
+
+            $useCase->sendAuthenticationCall($request->all());
+
+            return response()->json(status: 201);
+        } catch (MaxAttemptsExceededException $exception) {
+            return response()->json(data: [
+                'errors' => [
+                    'max_attempts' => 'Max attempts are reached, the user is banned'
+                ]
+            ], status: 429);
+        } catch (\Exception $e) {
+            return response()->json(data: [
+                'message' => $e->getMessage()
+            ], status: 500);
+        }
+
     }
 }
