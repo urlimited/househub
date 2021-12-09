@@ -54,9 +54,21 @@ class UserRepository implements UserRepositoryContract
 
     public function find(int $id): User
     {
-        $userData = UserEntity::findOrFail($id);
+        $userData = UserEntity::findOrFail($id)->toArray();
 
         $statusData = UserStatusHistoryEntity::findByUserId($id);
+
+        return new User([
+            ...$userData,
+            'phone' => $userData['login'],
+            'status_id' => $statusData->id
+        ]);
+    }
+
+    public function findByLogin(string $login): User {
+        $userData = UserEntity::where('login', $login)->firstOrFail()->toArray();
+
+        $statusData = UserStatusHistoryEntity::findByUserId($userData['id']);
 
         return new User([
             ...$userData,

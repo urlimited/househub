@@ -25,6 +25,7 @@ class AuthCodeRepository implements AuthCodeRepositoryContract
                 code: $authCode->code,
                 userId: $authCode->userId,
                 typeId: $authCode->typeId,
+                notificator_id: $authCode->notificator_id,
                 id: $authCode->id
             ),
             default => null,

@@ -54,11 +54,8 @@ final class RegisterUseCase
      */
     public function sendAuthenticationCall(array $userData): UseCaseResult
     {
-        if(!array_key_exists('id', $userData))
-            throw new Exception("Key id is not found in userData");
-
         try{
-            $user = $this->userRepository->find($userData['id']);
+            $user = $this->userRepository->findByLogin($userData['phone']);
 
             if($this->authCodeRepository->getAllAttemptsForUser() === config('auth.phone_confirmation.max_attempts')){
                 //TODO: ban the user

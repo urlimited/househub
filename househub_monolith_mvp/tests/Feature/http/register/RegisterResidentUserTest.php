@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\http\register;
 
-use App\Enums\AuthCodeType;
 use App\Enums\Role;
 use App\Enums\UserStatus;
 use Illuminate\Foundation\Testing\DatabaseTransactions;

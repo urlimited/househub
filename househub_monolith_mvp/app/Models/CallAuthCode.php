@@ -13,12 +13,15 @@ final class CallAuthCode extends AuthCode
      */
     public static function generate(int $userId, array $sourceList = []): self
     {
-        $phoneLastChars = substr(collect($sourceList)->shuffle()->first(), -4);
+        $notificator = collect($sourceList)->shuffle()->first();
+
+        $phoneLastChars = substr($notificator['value'], -4);
 
         return new CallAuthCode(
             code: $phoneLastChars,
             userId: $userId,
-            typeId: AuthCodeType::phone
+            typeId: AuthCodeType::phone,
+            notificator_id: $notificator['id']
         );
     }
 }

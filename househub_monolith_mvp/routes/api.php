@@ -22,4 +22,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::get('/users', [RegisterController::class, 'getUsers']);
 
 Route::post('/auth/register', [RegisterController::class, 'registerResidentUser']);
-Route::post('/auth/send_confirmation_code', [RegisterController::class, 'sendConfirmationPhoneCall']);
+Route::post('/auth/auth_code', [RegisterController::class, 'sendConfirmationPhoneCall']);

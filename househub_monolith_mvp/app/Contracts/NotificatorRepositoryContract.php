@@ -15,9 +15,9 @@ interface NotificatorRepositoryContract
     public function find(int $id): Notificator;
 
     /**
-     * @param int|User $id
+     * @param int|User $user
      * @throws AllNotificatorsUsedException
      * @return array
      */
-    public function getNotUsedNotificatorsBy(int|User $id): array;
+    public function getNotUsedNotificatorsBy(int|User $user): array;
 }
