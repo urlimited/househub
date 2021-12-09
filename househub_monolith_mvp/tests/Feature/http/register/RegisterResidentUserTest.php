@@ -27,7 +27,7 @@ class RegisterResidentUserTest extends TestCase
             'phone' => '+77771557027'
         ];
 
-        $response = $this->json(method: 'post', uri: '/api/register', data: $data);
+        $response = $this->json(method: 'post', uri: '/api/auth/register', data: $data);
 
         $response->assertStatus(200);
 
@@ -56,11 +56,6 @@ class RegisterResidentUserTest extends TestCase
         $this->assertDatabaseHas(table: 'user_status_histories', data: [
             "status_id" => UserStatus::registered,
             "user_id" => $userId
-        ]);
-
-        $this->assertDatabaseHas(table: 'auth_codes', data: [
-            "user_id" => $userId,
-            "type_id" => AuthCodeType::phone
         ]);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\RegisterResidentUser;
 use App\Http\Requests\SendConfirmationPhoneCall;
 use App\UseCases\RegisterUseCase;
 use Illuminate\Http\JsonResponse;
@@ -9,7 +10,7 @@ use Illuminate\Queue\MaxAttemptsExceededException;
 
 final class RegisterController extends Controller
 {
-    public function registerResidentUser(SendConfirmationPhoneCall $request): JsonResponse
+    public function registerResidentUser(RegisterResidentUser $request): JsonResponse
     {
         $this->validateIsHeaderContentTypeApplicationJSON($request);
 

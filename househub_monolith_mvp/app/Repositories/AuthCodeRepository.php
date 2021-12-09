@@ -57,4 +57,10 @@ class AuthCodeRepository implements AuthCodeRepositoryContract
         return new CallAuthCode();
         // TODO: Implement find() method.
     }
+
+    public function getAllAttemptsForUser(): array
+    {
+        return array();
+        // TODO: Implement getAllAttemptsForUser() method.
+    }
 }
