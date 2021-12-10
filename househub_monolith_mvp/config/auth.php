@@ -44,7 +44,7 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | User Providers
+    | UserEntity Providers
     |--------------------------------------------------------------------------
     |
     | All authentication drivers have a user provider. This defines how the
@@ -93,6 +93,10 @@ return [
             'expire' => 60,
             'throttle' => 60,
         ],
+    ],
+
+    'phone_confirmation' => [
+        'max_attempts' => 10
     ],
 
     /*
