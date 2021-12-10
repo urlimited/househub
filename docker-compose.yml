@@ -42,6 +42,8 @@ services:
       - "443:443"
     volumes:
       - ./:/var/www
+      - ./deployment/temp_data/certbot/conf:/etc/letsencrypt
+      - ./deployment/temp_data/certbot/www:/var/www/certbot
     networks:
       - app-network
 
