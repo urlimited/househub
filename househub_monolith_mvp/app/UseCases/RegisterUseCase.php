@@ -82,6 +82,10 @@ final class RegisterUseCase
         }
     }
 
+    public function confirmAuthenticationCode() {
+
+    }
+
     // TODO: [SRP] remove this into different class
     private function prepareDataForRegisterResidentUser(array $data): array
     {
