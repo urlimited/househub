@@ -8,22 +8,12 @@ use Illuminate\Validation\Validator;
 
 abstract class FormRequestJSON extends FormRequest
 {
-    /**
-     * Get the validator instance for the request.
-     *
-     * @return Validator
-     * @throws BindingResolutionException
-     */
-    protected function getValidatorInstance(): Validator
+    public function all($keys = null): array
     {
-        $factory = $this->container->make('Illuminate\Validation\Factory');
-
-        if (method_exists($this, 'validator'))
-        {
-            return $this->container->call([$this, 'validator'], compact('factory'));
+        if(empty($keys)){
+            return json_decode($this->getContent(), true);
         }
-        return $factory->make(
-            $this->json()->all(), $this->container->call([$this, 'rules']), $this->messages(), $this->attributes()
-        );
+
+        return parent::all();
     }
 }
