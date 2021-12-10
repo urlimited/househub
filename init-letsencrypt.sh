@@ -5,7 +5,7 @@ if ! [ -x "$(command -v docker-compose)" ]; then
   exit 1
 fi
 
-domains=(getoncourses.app)
+domains=(staging.househub.digital)
 rsa_key_size=4096
 data_path="./deployment/temp_data/certbot"
 email="maxim.tsoy.ca@gmail.com" # Adding a valid address is strongly recommended
