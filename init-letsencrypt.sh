@@ -39,7 +39,7 @@ echo
 
 
 echo "### Starting nginx ..."
-docker-compose up --force-recreate -d webserver
+docker-compose up --force-recreate -d househub_webserver
 echo
 
 echo "### Deleting dummy certificate for $domains ..."
