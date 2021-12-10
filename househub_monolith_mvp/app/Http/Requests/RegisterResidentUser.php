@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use JetBrains\PhpStorm\ArrayShape;
 
-class RegisterResidentUser extends FormRequest
+class RegisterResidentUser extends FormRequestJSON
 {
     /**
      * Determine if the user is authorized to make this request.
