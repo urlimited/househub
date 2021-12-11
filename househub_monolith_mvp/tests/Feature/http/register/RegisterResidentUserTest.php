@@ -57,4 +57,8 @@ class RegisterResidentUserTest extends TestCase
             "user_id" => $userId
         ]);
     }
+
+    public function testDoubleRegistrationIssue(){
+
+    }
 }

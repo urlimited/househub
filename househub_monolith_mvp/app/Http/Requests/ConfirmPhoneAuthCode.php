@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use JetBrains\PhpStorm\ArrayShape;
 
-class SendConfirmationPhoneCall extends FormRequestJSON
+class ConfirmPhoneAuthCode extends FormRequestJSON
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -21,11 +21,12 @@ class SendConfirmationPhoneCall extends FormRequestJSON
      *
      * @return array
      */
-    #[ArrayShape(['phone' => "string"])]
+    #[ArrayShape(['phone' => "string", 'code' => "string"])]
     public function rules(): array
     {
         return [
             'phone' => 'required|string|exists:users,login',
+            'code' => 'required|string'
         ];
     }
 }

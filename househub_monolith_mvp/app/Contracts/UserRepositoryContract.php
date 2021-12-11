@@ -6,8 +6,8 @@ use App\Models\User;
 
 interface UserRepositoryContract
 {
-    public function create(array $data): User;
-    public function update(): User;
+    public function create(User|array $userData): User;
+    public function update(User|array $userData): User;
     public function softDelete(): user;
     public function delete(): User;
     public function find(int $id): User;

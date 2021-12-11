@@ -12,6 +12,7 @@ use App\Exceptions\AllNotificatorsUsedException;
 use App\Models\CallAuthCode;
 use Exception;
 use Illuminate\Contracts\Container\BindingResolutionException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Queue\MaxAttemptsExceededException;
 use JetBrains\PhpStorm\ArrayShape;
 use Twilio\Exceptions\ConfigurationException;
@@ -54,15 +55,14 @@ final class RegisterUseCase
      */
     public function sendAuthenticationCall(array $userData): UseCaseResult
     {
-        try{
+        try {
             $user = $this->userRepository->findByLogin($userData['phone']);
 
-            if($this->authCodeRepository->getAllAttemptsForUser() === config('auth.phone_confirmation.max_attempts')){
+            if ($this->authCodeRepository->getAllAttemptsForUser() === config('auth.phone_confirmation.max_attempts')) {
                 //TODO: ban the user
 
                 throw new MaxAttemptsExceededException();
             }
-
 
             $phone = $this->authCodeRepository->create(
                 CallAuthCode::generate(
@@ -82,8 +82,33 @@ final class RegisterUseCase
         }
     }
 
-    public function confirmAuthenticationCode() {
+    /**
+     * @param array $data
+     * @return void
+     * @throws Exception
+     */
+    public function confirmAuthenticationCode(array $data): UseCaseResult
+    {
+        try {
+            $user = $this->userRepository->findByLogin($data['phone']);
 
+            if ($user->isBlocked())
+                throw new Exception('User is blocked');
+
+            $authCode = $this->authCodeRepository->findLastAuthCodeForUser($user->id);
+
+            $user->setAuthCode($authCode);
+
+            if($user->isAuthCodeValid($data['code'])){
+                $this->userRepository->update($user);
+
+                return new UseCaseResult(status: UseCaseResult::StatusSuccess, content: $user->publish());
+            } else {
+                return new UseCaseResult(status: UseCaseResult::StatusFail, message: "auth code is not valid");
+            }
+        } catch (ModelNotFoundException $exception) {
+            return new UseCaseResult(status: UseCaseResult::StatusFail, message: "user is not found");
+        }
     }
 
     // TODO: [SRP] remove this into different class

@@ -12,4 +12,5 @@ interface AuthCodeRepositoryContract
     public function delete(): AuthCode;
     public function find(): AuthCode;
     public function getAllAttemptsForUser(): array;
+    public function findLastAuthCodeForUser(int $userId): AuthCode;
 }
