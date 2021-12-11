@@ -15,7 +15,7 @@ final class UserRepository implements UserRepositoryContract
 
     public function create(array|User $userData): User
     {
-        if($userData instanceof User)
+        if ($userData instanceof User)
             $userData = $this->userModelToArray($userData);
 
         $dataProcessed = collect($userData)->reduce(function ($accum, $nextValue, $nextKey) {
@@ -32,12 +32,19 @@ final class UserRepository implements UserRepositoryContract
 
         $dataProcessed['id'] = $dataProcessed['user_id'];
 
-        return new User($dataProcessed);
+        return new User(
+            id: $dataProcessed['id'],
+            firstName: $dataProcessed['first_name'],
+            lastName: $dataProcessed['last_name'],
+            phone: $dataProcessed['phone'],
+            roleId: $dataProcessed['role_id'],
+            statusId: $dataProcessed['status_id']
+        );
     }
 
     public function update(array|User $userData): User
     {
-        if($userData instanceof User)
+        if ($userData instanceof User)
             $userData = $this->userModelToArray($userData);
 
         $dataProcessed = $userData;
@@ -47,9 +54,9 @@ final class UserRepository implements UserRepositoryContract
 
         $statusEntity = UserStatusHistoryEntity::findByUserId($userData['id']);
 
-        if($statusEntity->statusId !== $userData['status_id'])
-            UserStatusHistoryEntity ::create(collect($dataProcessed)
-                ->filter(function($value, $key){
+        if ($statusEntity->statusId !== $userData['status_id'])
+            UserStatusHistoryEntity::create(collect($dataProcessed)
+                ->filter(function ($value, $key) {
                     return collect(['user_id', 'status_id'])->contains($key);
                 })->toArray());
 
@@ -59,7 +66,14 @@ final class UserRepository implements UserRepositoryContract
             ->fill($dataProcessed)
             ->save();
 
-        return new User($dataProcessed);
+        return new User(
+            id: $dataProcessed['id'],
+            firstName: $dataProcessed['first_name'],
+            lastName: $dataProcessed['last_name'],
+            phone: $dataProcessed['phone'],
+            roleId: $dataProcessed['role_id'],
+            statusId: $dataProcessed['status_id']
+        );
     }
 
     public function softDelete(): User
@@ -82,11 +96,14 @@ final class UserRepository implements UserRepositoryContract
 
         $statusData = UserStatusHistoryEntity::findByUserId($id);
 
-        return new User([
-            ...$userData,
-            'phone' => $userData['login'],
-            'status_id' => $statusData->id
-        ]);
+        return new User(
+            id: $userData['id'],
+            firstName: $userData['first_name'],
+            lastName: $userData['last_name'],
+            phone: $userData['login'],
+            roleId: $userData['role_id'],
+            statusId: $statusData->id
+        );
     }
 
     public function findByLogin(string $login): User
@@ -95,11 +112,14 @@ final class UserRepository implements UserRepositoryContract
 
         $statusData = UserStatusHistoryEntity::findByUserId($userData['id']);
 
-        return new User([
-            ...$userData,
-            'phone' => $userData['login'],
-            'status_id' => $statusData->id
-        ]);
+        return new User(
+            id: $userData['id'],
+            firstName: $userData['first_name'],
+            lastName: $userData['last_name'],
+            phone: $userData['login'],
+            roleId: $userData['role_id'],
+            statusId: $statusData->id
+        );
     }
 
     #[ArrayShape([0 => "array", 'role' => "string", 'status' => "mixed"])]

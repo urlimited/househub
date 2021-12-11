@@ -15,7 +15,7 @@ class ConfirmPhoneAuthCodeTest extends TestCase
 
     /**
      * @return void
-     * @testdox Standard scenario for resident user registration
+     * @testdox Standard scenario for user phone confirmation
      */
     public function testStandardConfirmPhoneAuthCode()
     {
@@ -30,7 +30,19 @@ class ConfirmPhoneAuthCodeTest extends TestCase
 
         $response = $this->json(method: 'post', uri: '/api/auth/auth_code_confirmation', data: $data);
 
-        $response->assertStatus(201);
+        $response->assertStatus(200);
+
+        $response->assertJson([
+            "data" => [
+                "first_name" => "Edie",
+                "last_name" => "Broke",
+                "phone" => "+77771557027",
+                "role_id" => 1,
+                "role" => "resident",
+                "status_id" => 4,
+                "status" => "loginConfirmed"
+            ]
+        ]);
 
         $this->assertDatabaseHas(table: 'user_status_histories', data: [
             "user_id" => $userId,
