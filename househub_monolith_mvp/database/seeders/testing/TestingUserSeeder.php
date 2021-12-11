@@ -2,6 +2,7 @@
 
 namespace Database\Seeders\testing;
 
+use App\Enums\AuthCodeType;
 use App\Enums\ContactInformationType;
 use App\Enums\Role;
 use App\Enums\UserStatus;
@@ -36,6 +37,13 @@ class TestingUserSeeder extends Seeder
                 'user_id' => $userId,
                 'type_id' => ContactInformationType::phone,
                 'value' => $userData['login']
+            ]);
+
+            DB::table('auth_codes')->insert([
+                'type_id' => AuthCodeType::phone,
+                'user_id' => $userId,
+                'code' => '1111',
+                'notificator_id' => 1
             ]);
         }
     }

@@ -25,7 +25,7 @@ class AuthCodeRepository implements AuthCodeRepositoryContract
                 code: $authCode->code,
                 userId: $authCode->userId,
                 typeId: $authCode->typeId,
-                notificator_id: $authCode->notificator_id,
+                notificator_id: $authCode->notificatorId,
                 id: $authCode->id
             ),
             default => null,
@@ -63,5 +63,23 @@ class AuthCodeRepository implements AuthCodeRepositoryContract
     {
         return array();
         // TODO: Implement getAllAttemptsForUser() method.
+    }
+
+    public function findLastAuthCodeForUser(int $userId): AuthCode
+    {
+        $authCode = AuthCodeEntity::where('user_id', $userId)
+            ->orderByDesc('sent_at')
+            ->firstOrFail();
+
+        return match ($authCode->typeId) {
+            AuthCodeType::phone => new CallAuthCode(
+                code: $authCode->code,
+                userId: $authCode->userId,
+                typeId: $authCode->typeId,
+                notificator_id: $authCode->notificatorId,
+                id: $authCode->id
+            ),
+            default => null,
+        };
     }
 }

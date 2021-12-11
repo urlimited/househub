@@ -5,12 +5,10 @@ namespace App\Repositories\Entities;
 use Carbon\Carbon;
 
 /**
- * @method static create(array $data)
- * @method static where(array $data)
  * @property int $id
- * @property int $user_id
- * @property int $status_id
- * @property Carbon $saved_at
+ * @property int $userId
+ * @property int $statusId
+ * @property Carbon $savedAt
  */
 final class UserStatusHistoryEntity extends BaseModel
 {
@@ -31,7 +29,7 @@ final class UserStatusHistoryEntity extends BaseModel
 
     public static function findByUserId(int $userId): self{
         return self::where(['user_id' => $userId])
-            ->orderBy('saved_at', 'desc')
+            ->orderByDesc('saved_at')
             ->first();
     }
 }

@@ -4,7 +4,11 @@ namespace App\Repositories\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Builder;
 
+/**
+ * @mixin Builder
+ */
 class BaseModel extends Model
 {
     public $timestamps = false;

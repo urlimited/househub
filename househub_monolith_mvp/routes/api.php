@@ -23,3 +23,4 @@ Route::get('/users', [RegisterController::class, 'getUsers']);
 
 Route::post('/auth/register', [RegisterController::class, 'registerResidentUser']);
 Route::post('/auth/auth_code', [RegisterController::class, 'sendConfirmationPhoneCall']);
+Route::post('/auth/auth_code_confirmation', [RegisterController::class, 'confirmPhoneAuthCode']);

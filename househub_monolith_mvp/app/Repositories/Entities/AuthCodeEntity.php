@@ -2,11 +2,15 @@
 
 namespace App\Repositories\Entities;
 
-use DateTime;
+use Carbon\Carbon;
 
 /**
- * @method static create(array $data)
- * @method static where()
+ * @property int id
+ * @property int userId
+ * @property int typeId
+ * @property int notificatorId
+ * @property string code
+ * @property Carbon sentAt
  */
 final class AuthCodeEntity extends BaseModel
 {

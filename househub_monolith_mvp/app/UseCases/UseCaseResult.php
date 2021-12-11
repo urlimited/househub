@@ -8,9 +8,11 @@ final class UseCaseResult
     const StatusFail = 2;
 
     public function __construct(
-        public int $status,
-        public ?string $message = null
-    ){
+        public int     $status,
+        public mixed   $content = null,
+        public ?string $message = null,
+    )
+    {
 
     }
 }
