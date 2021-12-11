@@ -4,6 +4,7 @@ namespace Tests\Feature\http\register;
 
 use App\Enums\Role;
 use App\Enums\UserStatus;
+use Database\Seeders\testing\TestingUserSeeder;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
@@ -58,7 +59,18 @@ class RegisterResidentUserTest extends TestCase
         ]);
     }
 
-    public function testDoubleRegistrationIssue(){
+    public function testDoubleRegistrationIssue()
+    {
+        $this->seed(TestingUserSeeder::class);
 
+        $data = [
+            'first_name' => 'Edie',
+            'last_name' => 'Broke',
+            'phone' => '+77771557027'
+        ];
+
+        $response = $this->json(method: 'post', uri: '/api/auth/register', data: $data);
+
+        $response->assertStatus(422);
     }
 }
