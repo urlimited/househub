@@ -3,6 +3,8 @@
 namespace App\Repositories;
 
 use App\Contracts\UserRepositoryContract;
+use App\DTO\UserModelDTO;
+use App\Enums\UserStatus;
 use App\Models\User;
 use App\Repositories\Entities\ContactInformationEntity;
 use App\Repositories\Entities\UserEntity as UserEntity;
@@ -13,53 +15,54 @@ use JetBrains\PhpStorm\ArrayShape;
 final class UserRepository implements UserRepositoryContract
 {
 
-    public function create(array|User $userData): User
+    public function create(UserModelDTO $userData): User
     {
-        if($userData instanceof User)
-            $userData = $this->userModelToArray($userData);
+        $userId = UserEntity::create($userData->userEntityData)->id;
 
-        $dataProcessed = collect($userData)->reduce(function ($accum, $nextValue, $nextKey) {
-            return array_merge($accum, [Str::snake($nextKey) => $nextValue]);
-        }, []);
+        UserStatusHistoryEntity::create([
+            'user_id' => $userId,
+            'status_id' => UserStatus::registered
+        ]);
 
-        $dataProcessed['user_id'] = UserEntity::create($dataProcessed)->id;
-
-        UserStatusHistoryEntity::create($dataProcessed);
-
-        foreach ($dataProcessed['contact_information'] as $info) {
-            ContactInformationEntity::create([...$info, 'user_id' => $dataProcessed['user_id']]);
+        foreach ($userData->contactInformationEntityData as $info) {
+            ContactInformationEntity::create([...$info, 'user_id' => $userId]);
         }
 
-        $dataProcessed['id'] = $dataProcessed['user_id'];
-
-        return new User($dataProcessed);
+        return new User(
+            id: $userId,
+            firstName: $userData->userEntityData['first_name'],
+            lastName: $userData->userEntityData['last_name'],
+            phone: $userData->userEntityData['login'],
+            roleId: $userData->userEntityData['role_id'],
+            statusId: $userData->userEntityData['status_id']
+        );
     }
 
-    public function update(array|User $userData): User
+    public function update(UserModelDTO $userData): User
     {
-        if($userData instanceof User)
-            $userData = $this->userModelToArray($userData);
+        $statusEntity = UserStatusHistoryEntity::findByUserId($userData->userEntityData['id']);
 
-        $dataProcessed = $userData;
-
-        $dataProcessed['user_id'] = $userData['id'];
-        $dataProcessed['login'] = $userData['phone'];
-
-        $statusEntity = UserStatusHistoryEntity::findByUserId($userData['id']);
-
-        if($statusEntity->statusId !== $userData['status_id'])
-            UserStatusHistoryEntity ::create(collect($dataProcessed)
-                ->filter(function($value, $key){
-                    return collect(['user_id', 'status_id'])->contains($key);
-                })->toArray());
+        if ($statusEntity->statusId !== $userData->statusEntityData['status_id'])
+            UserStatusHistoryEntity::create([
+                ...$userData->statusEntityData,
+                'user_id' => $userData->userEntityData['id']
+            ]);
 
         // TODO: update contact information
 
-        (UserEntity::findOrFail($dataProcessed['id']))
-            ->fill($dataProcessed)
-            ->save();
+        $updatedUser = (UserEntity::findOrFail($userData->userEntityData['id']))
+            ->fill($userData->userEntityData);
 
-        return new User($dataProcessed);
+        $updatedUser->save();
+
+        return new User(
+            id: $updatedUser->id,
+            firstName: $updatedUser->firstName,
+            lastName: $updatedUser->lastName,
+            phone: $updatedUser->login,
+            roleId: $updatedUser->roleId,
+            statusId: $userData->statusEntityData['status_id']
+        );
     }
 
     public function softDelete(): User
@@ -82,11 +85,14 @@ final class UserRepository implements UserRepositoryContract
 
         $statusData = UserStatusHistoryEntity::findByUserId($id);
 
-        return new User([
-            ...$userData,
-            'phone' => $userData['login'],
-            'status_id' => $statusData->id
-        ]);
+        return new User(
+            id: $userData['id'],
+            firstName: $userData['first_name'],
+            lastName: $userData['last_name'],
+            phone: $userData['login'],
+            roleId: $userData['role_id'],
+            statusId: $statusData->id
+        );
     }
 
     public function findByLogin(string $login): User
@@ -95,20 +101,13 @@ final class UserRepository implements UserRepositoryContract
 
         $statusData = UserStatusHistoryEntity::findByUserId($userData['id']);
 
-        return new User([
-            ...$userData,
-            'phone' => $userData['login'],
-            'status_id' => $statusData->id
-        ]);
-    }
-
-    #[ArrayShape([0 => "array", 'role' => "string", 'status' => "mixed"])]
-    protected function userModelToArray(User $user): array
-    {
-        return [
-            ...collect(get_object_vars($user))->reduce(function ($accum, $nextValue, $nextKey) {
-                return array_merge($accum, [Str::snake($nextKey) => $nextValue]);
-            }, []),
-        ];
+        return new User(
+            id: $userData['id'],
+            firstName: $userData['first_name'],
+            lastName: $userData['last_name'],
+            phone: $userData['login'],
+            roleId: $userData['role_id'],
+            statusId: $statusData->id
+        );
     }
 }

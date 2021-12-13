@@ -7,6 +7,7 @@ use App\Http\Requests\RegisterResidentUser;
 use App\Http\Requests\SendConfirmationPhoneCall;
 use App\UseCases\RegisterUseCase;
 use App\UseCases\UseCaseResult;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Queue\MaxAttemptsExceededException;
 
@@ -14,22 +15,28 @@ final class RegisterController extends Controller
 {
     public function registerResidentUser(RegisterResidentUser $request): JsonResponse
     {
-        $this->validateIsHeaderContentTypeApplicationJSON($request);
+        try {
+            $this->validateIsHeaderContentTypeApplicationJSON($request);
 
-        $useCase = new RegisterUseCase();
+            $useCase = new RegisterUseCase();
 
-        $result = [
-            'data' => $useCase->registerResidentUser($request->all())
-        ];
+            $result = [
+                'data' => $useCase->registerResidentUser($request->all())
+            ];
 
-        return response()->json(data: $result, status: 200);
+            return response()->json(data: $result, status: 200);
+        } catch (Exception $e) {
+            return response()->json(data: [
+                'message' => $e->getMessage()
+            ], status: 500);
+        }
     }
 
     public function sendConfirmationPhoneCall(SendConfirmationPhoneCall $request): JsonResponse
     {
         $this->validateIsHeaderContentTypeApplicationJSON($request);
 
-        try{
+        try {
             $useCase = new RegisterUseCase();
 
             $useCase->sendAuthenticationCall($request->all());
@@ -41,7 +48,7 @@ final class RegisterController extends Controller
                     'max_attempts' => 'Max attempts are reached, the user is banned'
                 ]
             ], status: 429);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response()->json(data: [
                 'message' => $e->getMessage()
             ], status: 500);
@@ -58,15 +65,17 @@ final class RegisterController extends Controller
 
             $result = $useCase->confirmAuthenticationCode($request->all());
 
-            if($result->status === UseCaseResult::StatusSuccess)
-                return response()->json(data: $result->content, status: 200);
+            if ($result->status === UseCaseResult::StatusSuccess)
+                return response()->json(data: [
+                    'data' => $result->content
+                ], status: 200);
             else
                 return response()->json(data: [
                     'errors' => [
                         'code' => $result->message
                     ]
                 ], status: 422);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response()->json(data: [
                 'message' => $e->getMessage()
             ], status: 500);
