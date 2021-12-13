@@ -5,7 +5,7 @@ namespace App\UseCases;
 use App\Contracts\AuthCodeRepositoryContract;
 use App\Contracts\NotificatorRepositoryContract;
 use App\Contracts\UserRepositoryContract;
-use App\Enums\ContactInformationType;
+use App\DTO\UserModelDTO;
 use App\Enums\Role;
 use App\Enums\UserStatus;
 use App\Exceptions\AllNotificatorsUsedException;
@@ -38,11 +38,15 @@ final class RegisterUseCase
      * Creates a new user
      * @param array $userData
      * @return array
+     * @throws Exception
      */
     #[ArrayShape([0 => "array", 'role' => "string", 'status' => "mixed"])]
     public function registerResidentUser(array $userData): array
     {
-        $user = $this->userRepository->create($this->prepareDataForRegisterResidentUser($userData));
+        $userData['role_id'] = Role::resident;
+        $userData['status_id'] = UserStatus::registered;
+
+        $user = $this->userRepository->create(UserModelDTO::prepareDataToRepository($userData));
 
         return $user->publish();
     }
@@ -109,31 +113,5 @@ final class RegisterUseCase
         } catch (ModelNotFoundException $exception) {
             return new UseCaseResult(status: UseCaseResult::StatusFail, message: "user is not found");
         }
-    }
-
-    // TODO: [SRP] remove this into different class
-    private function prepareDataForRegisterResidentUser(array $data): array
-    {
-        $processedUserData = $data;
-
-        $processedUserData['role_id'] = Role::resident;
-        $processedUserData['status_id'] = UserStatus::registered;
-        $processedUserData['login'] = $data['phone'];
-
-        $processedUserData['contact_information'] = [
-            [
-                'type_id' => ContactInformationType::phone,
-                'value' => $data['phone'],
-                'is_preferable' => true
-            ]
-        ];
-
-        if (array_key_exists('email', $data))
-            $processedUserData['contact_information'][] = [
-                'type_id' => ContactInformationType::email,
-                'value' => $data['email']
-            ];
-
-        return $processedUserData;
     }
 }

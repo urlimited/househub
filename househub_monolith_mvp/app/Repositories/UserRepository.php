@@ -3,6 +3,8 @@
 namespace App\Repositories;
 
 use App\Contracts\UserRepositoryContract;
+use App\DTO\UserModelDTO;
+use App\Enums\UserStatus;
 use App\Models\User;
 use App\Repositories\Entities\ContactInformationEntity;
 use App\Repositories\Entities\UserEntity as UserEntity;
@@ -13,32 +15,26 @@ use JetBrains\PhpStorm\ArrayShape;
 final class UserRepository implements UserRepositoryContract
 {
 
-    public function create(array|User $userData): User
+    public function create(UserModelDTO $userData): User
     {
-        if ($userData instanceof User)
-            $userData = $this->userModelToArray($userData);
+        $userId = UserEntity::create($userData->userEntityData)->id;
 
-        $dataProcessed = collect($userData)->reduce(function ($accum, $nextValue, $nextKey) {
-            return array_merge($accum, [Str::snake($nextKey) => $nextValue]);
-        }, []);
+        UserStatusHistoryEntity::create([
+            'user_id' => $userId,
+            'status_id' => UserStatus::registered
+        ]);
 
-        $dataProcessed['user_id'] = UserEntity::create($dataProcessed)->id;
-
-        UserStatusHistoryEntity::create($dataProcessed);
-
-        foreach ($dataProcessed['contact_information'] as $info) {
-            ContactInformationEntity::create([...$info, 'user_id' => $dataProcessed['user_id']]);
+        foreach ($userData->contactInformationEntityData as $info) {
+            ContactInformationEntity::create([...$info, 'user_id' => $userId]);
         }
 
-        $dataProcessed['id'] = $dataProcessed['user_id'];
-
         return new User(
-            id: $dataProcessed['id'],
-            firstName: $dataProcessed['first_name'],
-            lastName: $dataProcessed['last_name'],
-            phone: $dataProcessed['phone'],
-            roleId: $dataProcessed['role_id'],
-            statusId: $dataProcessed['status_id']
+            id: $userId,
+            firstName: $userData->userEntityData['first_name'],
+            lastName: $userData->userEntityData['last_name'],
+            phone: $userData->userEntityData['login'],
+            roleId: $userData->userEntityData['role_id'],
+            statusId: $userData->userEntityData['status_id']
         );
     }
 

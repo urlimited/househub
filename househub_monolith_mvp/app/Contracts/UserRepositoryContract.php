@@ -2,11 +2,12 @@
 
 namespace App\Contracts;
 
+use App\DTO\UserModelDTO;
 use App\Models\User;
 
 interface UserRepositoryContract
 {
-    public function create(User|array $userData): User;
+    public function create(UserModelDTO $userData): User;
     public function update(User|array $userData): User;
     public function softDelete(): user;
     public function delete(): User;
