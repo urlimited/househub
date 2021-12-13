@@ -104,7 +104,7 @@ final class RegisterUseCase
             $user->setAuthCode($authCode);
 
             if($user->isAuthCodeValid($data['code'])){
-                $this->userRepository->update($user);
+                $this->userRepository->update(UserModelDTO::prepareDataToRepository($user));
 
                 return new UseCaseResult(status: UseCaseResult::StatusSuccess, content: $user->publish());
             } else {

@@ -3,8 +3,10 @@
 namespace App\DTO;
 
 use App\Enums\ContactInformationType;
+use App\Models\User;
 use Exception;
 use Illuminate\Support\Str;
+use JetBrains\PhpStorm\ArrayShape;
 
 final class UserModelDTO extends BaseModelDTO
 {
@@ -20,11 +22,14 @@ final class UserModelDTO extends BaseModelDTO
     /**
      * @throws Exception
      */
-    static public function prepareDataToRepository(array $data): static
+    static public function prepareDataToRepository(array|User $data): static
     {
         $userEntityData = [];
         $contactInformationEntityData = [];
         $statusEntityData = [];
+
+        if($data instanceof User)
+            $data = self::modelToArray($data);
 
         $dataProcessed = collect($data)->reduce(function ($accum, $nextValue, $nextKey) {
             return array_merge($accum, [Str::snake($nextKey) => $nextValue]);
@@ -40,7 +45,7 @@ final class UserModelDTO extends BaseModelDTO
                 default => $userEntityKey
             };
 
-            $userEntityData[$saveKey] = $processedUserData[$userEntityKey];
+            $userEntityData[$saveKey] = $value;
         }
 
         $processedContactsData = collect($dataProcessed)->filter(function ($val, $key) {
@@ -71,5 +76,23 @@ final class UserModelDTO extends BaseModelDTO
             contactInformationEntityData: $contactInformationEntityData,
             statusEntityData: $statusEntityData
         );
+    }
+
+    #[ArrayShape([
+        'id' => "int",
+        'first_name' => "string",
+        'last_name' => "string",
+        'phone' => "string",
+        'email' => "string",
+        'role_id' => "int",
+        'status_id' => "int"
+    ])]
+    static protected function modelToArray(User $user): array
+    {
+        return [
+            ...collect(get_object_vars($user))->reduce(function ($accum, $nextValue, $nextKey) {
+                return array_merge($accum, [Str::snake($nextKey) => $nextValue]);
+            }, []),
+        ];
     }
 }

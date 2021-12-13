@@ -38,37 +38,30 @@ final class UserRepository implements UserRepositoryContract
         );
     }
 
-    public function update(array|User $userData): User
+    public function update(UserModelDTO $userData): User
     {
-        if ($userData instanceof User)
-            $userData = $this->userModelToArray($userData);
+        $statusEntity = UserStatusHistoryEntity::findByUserId($userData->userEntityData['id']);
 
-        $dataProcessed = $userData;
-
-        $dataProcessed['user_id'] = $userData['id'];
-        $dataProcessed['login'] = $userData['phone'];
-
-        $statusEntity = UserStatusHistoryEntity::findByUserId($userData['id']);
-
-        if ($statusEntity->statusId !== $userData['status_id'])
-            UserStatusHistoryEntity::create(collect($dataProcessed)
-                ->filter(function ($value, $key) {
-                    return collect(['user_id', 'status_id'])->contains($key);
-                })->toArray());
+        if ($statusEntity->statusId !== $userData->statusEntityData['status_id'])
+            UserStatusHistoryEntity::create([
+                ...$userData->statusEntityData,
+                'user_id' => $userData->userEntityData['id']
+            ]);
 
         // TODO: update contact information
 
-        (UserEntity::findOrFail($dataProcessed['id']))
-            ->fill($dataProcessed)
-            ->save();
+        $updatedUser = (UserEntity::findOrFail($userData->userEntityData['id']))
+            ->fill($userData->userEntityData);
+
+        $updatedUser->save();
 
         return new User(
-            id: $dataProcessed['id'],
-            firstName: $dataProcessed['first_name'],
-            lastName: $dataProcessed['last_name'],
-            phone: $dataProcessed['phone'],
-            roleId: $dataProcessed['role_id'],
-            statusId: $dataProcessed['status_id']
+            id: $updatedUser->id,
+            firstName: $updatedUser->firstName,
+            lastName: $updatedUser->lastName,
+            phone: $updatedUser->login,
+            roleId: $updatedUser->roleId,
+            statusId: $userData->statusEntityData['status_id']
         );
     }
 
@@ -116,15 +109,5 @@ final class UserRepository implements UserRepositoryContract
             roleId: $userData['role_id'],
             statusId: $statusData->id
         );
-    }
-
-    #[ArrayShape([0 => "array", 'role' => "string", 'status' => "mixed"])]
-    protected function userModelToArray(User $user): array
-    {
-        return [
-            ...collect(get_object_vars($user))->reduce(function ($accum, $nextValue, $nextKey) {
-                return array_merge($accum, [Str::snake($nextKey) => $nextValue]);
-            }, []),
-        ];
     }
 }

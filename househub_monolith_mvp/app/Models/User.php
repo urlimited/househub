@@ -64,7 +64,7 @@ class User
         $token = config('services.twilio.auth_token');
         $twilio = new Client($sid, $token);
 
-        $message = $twilio->calls
+        $twilio->calls
             ->create($this->phone,
                 $fromPhone,
                 [
@@ -73,8 +73,6 @@ class User
                     "timeout" => config('services.twilio.timeout')
                 ]
             );
-
-        print($message->sid);
     }
 
     public function isBlocked(): bool
