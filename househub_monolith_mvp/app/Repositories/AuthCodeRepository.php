@@ -2,7 +2,7 @@
 
 namespace App\Repositories;
 
-use App\Contracts\AuthCodeRepositoryContract;
+use App\Contracts\Repositories\AuthCodeRepositoryContract;
 use App\Enums\AuthCodeType;
 use App\Models\AuthCode;
 use App\Models\CallAuthCode;

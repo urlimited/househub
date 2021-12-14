@@ -2,7 +2,7 @@
 
 namespace App\Repositories;
 
-use App\Contracts\NotificatorRepositoryContract;
+use App\Contracts\Repositories\NotificatorRepositoryContract;
 use App\Enums\NotificatorType;
 use App\Exceptions\AllNotificatorsUsedException;
 use App\Models\Notificator;

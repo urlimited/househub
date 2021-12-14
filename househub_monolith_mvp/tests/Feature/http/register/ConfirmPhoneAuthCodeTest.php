@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\http\register;
 
-use App\Enums\AuthCodeType;
 use App\Enums\UserStatus;
 use Database\Seeders\testing\TestingUserSeeder;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -32,15 +31,9 @@ class ConfirmPhoneAuthCodeTest extends TestCase
 
         $response->assertStatus(200);
 
-        $response->assertJson([
+        $response->assertJsonStructure([
             "data" => [
-                "first_name" => "Edie",
-                "last_name" => "Broke",
-                "phone" => "+77771557027",
-                "role_id" => 1,
-                "role" => "resident",
-                "status_id" => 4,
-                "status" => "loginConfirmed"
+                "access_token"
             ]
         ]);
 

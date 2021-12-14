@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Storage;
+
 return [
 
     /*
@@ -111,5 +113,7 @@ return [
     */
 
     'password_timeout' => 10800,
+
+    'jwt_client_private_key' => env('JWT_PRIVATE_KEY')
 
 ];

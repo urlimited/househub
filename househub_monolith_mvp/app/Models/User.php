@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 use JetBrains\PhpStorm\ArrayShape;
 use Twilio\Exceptions\ConfigurationException;
 use Twilio\Exceptions\TwilioException;
+use Twilio\Jwt\JWT;
 use Twilio\Rest\Client;
 
 class User
@@ -101,5 +102,9 @@ class User
             $this->statusId = UserStatus::loginConfirmed;
 
         return $this->authCode->code === $toValidateAuthCode;
+    }
+
+    public function generateAccessToken () {
+
     }
 }
