@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Contracts\NotificatorRepositoryContract;
+use App\Contracts\Repositories\NotificatorRepositoryContract;
 use JetBrains\PhpStorm\ArrayShape;
 use JetBrains\PhpStorm\NoReturn;
 

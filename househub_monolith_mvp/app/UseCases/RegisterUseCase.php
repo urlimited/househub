@@ -2,9 +2,10 @@
 
 namespace App\UseCases;
 
-use App\Contracts\AuthCodeRepositoryContract;
-use App\Contracts\NotificatorRepositoryContract;
-use App\Contracts\UserRepositoryContract;
+use App\Contracts\Repositories\AuthCodeRepositoryContract;
+use App\Contracts\Repositories\NotificatorRepositoryContract;
+use App\Contracts\Repositories\UserRepositoryContract;
+use App\Contracts\Services\TokenServiceContract;
 use App\DTO\UserModelDTO;
 use App\Enums\Role;
 use App\Enums\UserStatus;
@@ -96,6 +97,8 @@ final class RegisterUseCase
         try {
             $user = $this->userRepository->findByLogin($data['phone']);
 
+            $user->generateAccessToken();
+
             if ($user->isBlocked())
                 throw new Exception('User is blocked');
 
@@ -106,7 +109,12 @@ final class RegisterUseCase
             if($user->isAuthCodeValid($data['code'])){
                 $this->userRepository->update(UserModelDTO::prepareDataToRepository($user));
 
-                return new UseCaseResult(status: UseCaseResult::StatusSuccess, content: $user->publish());
+                $tokenService = app()->make(TokenServiceContract::class);
+
+                return new UseCaseResult(
+                    status: UseCaseResult::StatusSuccess,
+                    content: ['access_token' => $tokenService::generateAccessTokenForUser($user)]
+                );
             } else {
                 return new UseCaseResult(status: UseCaseResult::StatusFail, message: "auth code is not valid");
             }

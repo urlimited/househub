@@ -2,15 +2,13 @@
 
 namespace App\Repositories;
 
-use App\Contracts\UserRepositoryContract;
+use App\Contracts\Repositories\UserRepositoryContract;
 use App\DTO\UserModelDTO;
 use App\Enums\UserStatus;
 use App\Models\User;
 use App\Repositories\Entities\ContactInformationEntity;
 use App\Repositories\Entities\UserEntity as UserEntity;
 use App\Repositories\Entities\UserStatusHistoryEntity;
-use Illuminate\Support\Str;
-use JetBrains\PhpStorm\ArrayShape;
 
 final class UserRepository implements UserRepositoryContract
 {

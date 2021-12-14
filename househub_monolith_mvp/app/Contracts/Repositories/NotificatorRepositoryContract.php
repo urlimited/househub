@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Contracts;
+namespace App\Contracts\Repositories;
 
 use App\Exceptions\AllNotificatorsUsedException;
 use App\Models\Notificator;
