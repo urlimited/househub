@@ -4,14 +4,11 @@ namespace Tests\Feature\http\register;
 
 use App\Enums\UserStatus;
 use Database\Seeders\testing\TestingUserSeeder;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class ConfirmPhoneAuthCodeTest extends TestCase
 {
-    use DatabaseTransactions;
-
     /**
      * @return void
      * @testdox Standard scenario for user phone confirmation
