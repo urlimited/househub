@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\http\register;
 
+use App\Enums\TokenType;
 use App\Enums\UserStatus;
 use Database\Seeders\testing\TestingUserSeeder;
 use Illuminate\Support\Facades\DB;
@@ -37,6 +38,12 @@ class ConfirmPhoneAuthCodeTest extends TestCase
         $this->assertDatabaseHas(table: 'user_status_histories', data: [
             "user_id" => $userId,
             "status_id" => UserStatus::loginConfirmed
+        ]);
+
+        $this->assertDatabaseHas(table: 'tokens', data: [
+            'user_id' => $userId,
+            'type_id' => TokenType::access,
+            'value' => json_decode($response->getContent(), true)['data']['access_token']['value']
         ]);
     }
 }

@@ -6,5 +6,5 @@ use App\Models\User;
 
 interface TokenServiceContract
 {
-    static public function generateAccessTokenForUser(User $user): string;
+    static public function generateAccessTokenForUser(int $userId): string;
 }
