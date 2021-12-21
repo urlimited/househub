@@ -21,6 +21,9 @@ class DatabaseSeeder extends Seeder
             NotificatorTypeSeeder::class,
             NotificatorSeeder::class,
             TokenTypeSeeder::class,
+            CountrySeeder::class,
+            CitySeeder::class,
+            RealEstateTypeSeeder::class,
         ]);
     }
 }

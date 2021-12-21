@@ -6,7 +6,6 @@ use App\Contracts\Repositories\AuthCodeRepositoryContract;
 use App\Contracts\Repositories\NotificatorRepositoryContract;
 use App\Contracts\Repositories\TokenRepositoryContract;
 use App\Contracts\Repositories\UserRepositoryContract;
-use App\Contracts\Services\TokenServiceContract;
 use App\DTO\UserModelDTO;
 use App\Enums\Role;
 use App\Enums\UserStatus;
@@ -94,7 +93,7 @@ final class RegisterUseCase
     /**
      * @param array $data
      * @return UseCaseResult
-     * @throws BindingResolutionException
+     * @throws BindingResolutionException|Exception
      */
     public function confirmAuthenticationCode(array $data): UseCaseResult
     {
