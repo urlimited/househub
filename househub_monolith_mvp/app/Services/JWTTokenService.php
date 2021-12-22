@@ -13,13 +13,10 @@ class JWTTokenService implements TokenServiceContract
     /**
      * @throws Exception
      */
-    static public function generateAccessTokenForUser(User $user): string
+    static public function generateAccessTokenForUser(int $userId): string
     {
-        if(is_null($user->id))
-            throw new Exception('User\'s id is null');
-
         $payload = [
-            'sub' => $user->id,
+            'sub' => $userId,
             'iss' => 'https://househub.digital',
             'exp' => now()->addMonth()->timestamp,
             'aud' => ['mobile']

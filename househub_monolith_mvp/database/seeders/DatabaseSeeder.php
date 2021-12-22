@@ -20,6 +20,10 @@ class DatabaseSeeder extends Seeder
             AuthCodeTypesSeeder::class,
             NotificatorTypeSeeder::class,
             NotificatorSeeder::class,
+            TokenTypeSeeder::class,
+            CountrySeeder::class,
+            CitySeeder::class,
+            RealEstateTypeSeeder::class,
         ]);
     }
 }

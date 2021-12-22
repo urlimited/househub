@@ -22,6 +22,6 @@ final class AuthCodeEntity extends BaseModel
         'type_id',
         'notificator_id',
         'code',
-        'sentAt'
+        'sent_at'
     ];
 }

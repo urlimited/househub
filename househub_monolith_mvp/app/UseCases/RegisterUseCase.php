@@ -4,13 +4,14 @@ namespace App\UseCases;
 
 use App\Contracts\Repositories\AuthCodeRepositoryContract;
 use App\Contracts\Repositories\NotificatorRepositoryContract;
+use App\Contracts\Repositories\TokenRepositoryContract;
 use App\Contracts\Repositories\UserRepositoryContract;
-use App\Contracts\Services\TokenServiceContract;
 use App\DTO\UserModelDTO;
 use App\Enums\Role;
 use App\Enums\UserStatus;
 use App\Exceptions\AllNotificatorsUsedException;
 use App\Models\CallAuthCode;
+use App\Models\Token;
 use Exception;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -24,6 +25,7 @@ final class RegisterUseCase
     private UserRepositoryContract $userRepository;
     private AuthCodeRepositoryContract $authCodeRepository;
     private NotificatorRepositoryContract $notificatorRepository;
+    private TokenRepositoryContract $tokenRepository;
 
     /**
      * @throws BindingResolutionException
@@ -33,6 +35,7 @@ final class RegisterUseCase
         $this->userRepository = app()->make(UserRepositoryContract::class);
         $this->authCodeRepository = app()->make(AuthCodeRepositoryContract::class);
         $this->notificatorRepository = app()->make(NotificatorRepositoryContract::class);
+        $this->tokenRepository = app()->make(TokenRepositoryContract::class);
     }
 
     /**
@@ -89,8 +92,8 @@ final class RegisterUseCase
 
     /**
      * @param array $data
-     * @return void
-     * @throws Exception
+     * @return UseCaseResult
+     * @throws BindingResolutionException|Exception
      */
     public function confirmAuthenticationCode(array $data): UseCaseResult
     {
@@ -109,11 +112,11 @@ final class RegisterUseCase
             if($user->isAuthCodeValid($data['code'])){
                 $this->userRepository->update(UserModelDTO::prepareDataToRepository($user));
 
-                $tokenService = app()->make(TokenServiceContract::class);
+                $accessToken = $this->tokenRepository->create(Token::generate($user->id)->toDB());
 
                 return new UseCaseResult(
                     status: UseCaseResult::StatusSuccess,
-                    content: ['access_token' => $tokenService::generateAccessTokenForUser($user)]
+                    content: ['access_token' => $accessToken->publish()]
                 );
             } else {
                 return new UseCaseResult(status: UseCaseResult::StatusFail, message: "auth code is not valid");
