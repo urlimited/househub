@@ -8,7 +8,7 @@ abstract class RealEstate
         public string $address,
         protected int $typeId,
         protected int $cityId,
-        protected ?int $id = null
+        public ?int $id = null
     ){
 
     }
@@ -16,4 +16,8 @@ abstract class RealEstate
     abstract public function beforeCreate();
     abstract public function beforeDelete();
     abstract public function beforeUpdate();
+
+    public function publish(){
+
+    }
 }

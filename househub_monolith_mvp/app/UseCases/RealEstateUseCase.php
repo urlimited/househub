@@ -2,29 +2,50 @@
 
 namespace App\UseCases;
 
-use App\Contracts\Repositories\UserRepositoryContract;
-use Exception;
+use App\Contracts\Repositories\RealEstateRepositoryContract;
+use App\DTO\ApartmentRealEstateModelDTO;
+use App\DTO\HouseRealEstateModelDTO;
+use App\DTO\ResidentialComplexRealEstateModelDTO;
 use Illuminate\Contracts\Container\BindingResolutionException;
 
 final class RealEstateUseCase
 {
-    private UserRepositoryContract $userRepository;
+    private RealEstateRepositoryContract $realEstateRepository;
 
     /**
      * @throws BindingResolutionException
      */
     public function __construct()
     {
-        $this->userRepository = app()->make(UserRepositoryContract::class);
+        $this->realEstateRepository = app()->make(RealEstateRepositoryContract::class);
     }
 
-    /**
-     * Creates a new user
-     * @param array $userData
-     * @return array
-     * @throws Exception
-     */
-    public function createRealEstate(array $realEstateData): array
+    public function createApartmentRealEstate(array $realEstateData): array
+    {
+        if(key_exists('residential_complex_name', $realEstateData)) {
+            $residentialComplex = $this->realEstateRepository->create(ResidentialComplexRealEstateModelDTO::repositoryCreateData($realEstateData));
+
+            $realEstateData['residential_complex_id'] = $residentialComplex->id;
+        }
+
+
+        if(key_exists('house_number', $realEstateData)){
+            $house = $this->realEstateRepository->create(HouseRealEstateModelDTO::repositoryCreateData($realEstateData));
+
+            $realEstateData['house_id'] = $house->id;
+        }
+
+        $apartment = $this->realEstateRepository->create(ApartmentRealEstateModelDTO::repositoryCreateData($realEstateData));
+
+        return $apartment->publish();
+    }
+
+    public function createHouseRealEstate(array $realEstateData): array
+    {
+        return [];
+    }
+
+    public function createResidentialComplexRealEstate(array $realEstateData): array
     {
         return [];
     }

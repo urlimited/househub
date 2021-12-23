@@ -9,9 +9,10 @@ final class ApartmentRealEstate extends RealEstate
         protected int $typeId,
         protected int $cityId,
         public string $apartmentNumber,
+        public int $houseId,
         public ?string $floorNumber = null,
         public ?string $entrance = null,
-        protected ?int $id = null
+        public ?int $id = null
     ){
         parent::__construct(
             address: $address,

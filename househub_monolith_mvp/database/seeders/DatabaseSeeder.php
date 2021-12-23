@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             CountrySeeder::class,
             CitySeeder::class,
             RealEstateTypeSeeder::class,
+            ResidentialComplexRealEstateSeeder::class
         ]);
     }
 }

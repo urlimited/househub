@@ -2,14 +2,17 @@
 
 namespace App\Models;
 
+use JetBrains\PhpStorm\Pure;
+
 final class ResidentialComplexRealEstate extends RealEstate
 {
+    #[Pure]
     public function __construct(
         public string $name,
         public string $address,
         protected int $typeId,
         protected int $cityId,
-        protected ?int $id = null
+        public ?int $id = null
     ){
         parent::__construct(
             address: $address,
