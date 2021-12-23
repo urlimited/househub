@@ -20,33 +20,56 @@ final class RealEstateUseCase
         $this->realEstateRepository = app()->make(RealEstateRepositoryContract::class);
     }
 
-    public function createApartmentRealEstate(array $realEstateData): array
+    public function createApartmentRealEstate(array $realEstateData): UseCaseResult
     {
-        if(key_exists('residential_complex_name', $realEstateData)) {
-            $residentialComplex = $this->realEstateRepository->create(ResidentialComplexRealEstateModelDTO::repositoryCreateData($realEstateData));
+        if (key_exists('residential_complex_name', $realEstateData)) {
+            $residentialComplex = $this->realEstateRepository
+                ->create(ResidentialComplexRealEstateModelDTO::repositoryCreateData($realEstateData));
 
             $realEstateData['residential_complex_id'] = $residentialComplex->id;
         }
 
 
-        if(key_exists('house_number', $realEstateData)){
-            $house = $this->realEstateRepository->create(HouseRealEstateModelDTO::repositoryCreateData($realEstateData));
+        if (key_exists('house_number', $realEstateData)) {
+            $house = $this->realEstateRepository
+                ->create(HouseRealEstateModelDTO::repositoryCreateData($realEstateData));
 
             $realEstateData['house_id'] = $house->id;
         }
 
-        $apartment = $this->realEstateRepository->create(ApartmentRealEstateModelDTO::repositoryCreateData($realEstateData));
+        return new UseCaseResult(
+            status: UseCaseResult::StatusSuccess,
+            content: $this->realEstateRepository
+                ->create(ApartmentRealEstateModelDTO::repositoryCreateData($realEstateData))
+                ->publish()
+        );
 
-        return $apartment->publish();
     }
 
-    public function createHouseRealEstate(array $realEstateData): array
+    public function createHouseRealEstate(array $realEstateData): UseCaseResult
     {
-        return [];
+        if (key_exists('residential_complex_name', $realEstateData)) {
+            $residentialComplex = $this->realEstateRepository
+                ->create(ResidentialComplexRealEstateModelDTO::repositoryCreateData($realEstateData));
+
+            $realEstateData['residential_complex_id'] = $residentialComplex->id;
+        }
+
+        return new UseCaseResult(
+            status: UseCaseResult::StatusSuccess,
+            content: $this->realEstateRepository
+                ->create(HouseRealEstateModelDTO::repositoryCreateData($realEstateData))
+                ->publish()
+        );
     }
 
-    public function createResidentialComplexRealEstate(array $realEstateData): array
+    public function createResidentialComplexRealEstate(array $realEstateData): UseCaseResult
     {
-        return [];
+        return new UseCaseResult(
+            status: UseCaseResult::StatusSuccess,
+            content: $this->realEstateRepository
+                ->create(ResidentialComplexRealEstateModelDTO::repositoryCreateData($realEstateData))
+                ->publish()
+        );
     }
 }

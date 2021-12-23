@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\RealEstateController;
 use App\Http\Controllers\RegisterController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -24,3 +25,7 @@ Route::get('/users', [RegisterController::class, 'getUsers']);
 Route::post('/auth/register', [RegisterController::class, 'registerResidentUser']);
 Route::post('/auth/auth_code', [RegisterController::class, 'sendConfirmationPhoneCall']);
 Route::post('/auth/auth_code_confirmation', [RegisterController::class, 'confirmPhoneAuthCode']);
+
+Route::post('/real_estates/apartment', [RealEstateController::class, 'createApartment']);
+Route::post('/real_estates/house', [RealEstateController::class, 'createHouse']);
+Route::post('/real_estates/residential_complex', [RealEstateController::class, 'createResidentialComplex']);
