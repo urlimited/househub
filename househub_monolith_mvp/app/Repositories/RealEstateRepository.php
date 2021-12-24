@@ -62,7 +62,8 @@ final class RealEstateRepository implements RealEstateRepositoryContract
                     'address' => $realEstate->address,
                     'typeId' => $realEstate->typeId,
                     'cityId' => $realEstate->cityId,
-                    'id' => $realEstate->id
+                    'id' => $realEstate->id,
+                    'houseId' => $realEstate->parentId
                 ]
             ),
             default => null,

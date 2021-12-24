@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\RealEstate\CreateApartment;
+use App\Http\Requests\RealEstate\CreateHouse;
+use App\Http\Requests\RealEstate\CreateResidentialComplex;
 use App\UseCases\RealEstateUseCase;
 use App\UseCases\UseCaseResult;
 use Exception;
@@ -36,7 +38,7 @@ final class RealEstateController extends Controller
         }
     }
 
-    public function createHouse(CreateApartment $request): JsonResponse
+    public function createHouse(CreateHouse $request): JsonResponse
     {
         try {
             $this->validateIsHeaderContentTypeApplicationJSON($request);
@@ -62,7 +64,7 @@ final class RealEstateController extends Controller
         }
     }
 
-    public function createResidentialComplex(CreateApartment $request): JsonResponse
+    public function createResidentialComplex(CreateResidentialComplex $request): JsonResponse
     {
         try {
             $this->validateIsHeaderContentTypeApplicationJSON($request);

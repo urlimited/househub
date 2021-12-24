@@ -36,4 +36,14 @@ final class ResidentialComplexRealEstate extends RealEstate
     {
         // TODO: Implement beforeUpdate() method.
     }
+
+    public function publish()
+    {
+        return [
+            'id' => $this->id,
+            'address' => $this->address,
+            'city_id' => $this->cityId,
+            'name' => $this->name
+        ];
+    }
 }

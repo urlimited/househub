@@ -11,7 +11,7 @@ final class HouseRealEstate extends RealEstate
         public string $address,
         protected int $typeId,
         protected int $cityId,
-        public string $number,
+        public string $houseNumber,
         public ?int $floorsTotalNumber = null,
         public ?int $residentialComplexId = null,
         public ?int $id = null
@@ -37,5 +37,16 @@ final class HouseRealEstate extends RealEstate
     public function beforeUpdate()
     {
         // TODO: Implement beforeUpdate() method.
+    }
+
+    public function publish()
+    {
+        return [
+            'id' => $this->id,
+            'address' => $this->address,
+            'city_id' => $this->cityId,
+            'house_number' => $this->houseNumber,
+            'floors_total_number' => $this->floorsTotalNumber
+        ];
     }
 }

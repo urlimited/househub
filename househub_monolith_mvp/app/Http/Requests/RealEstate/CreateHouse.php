@@ -4,10 +4,10 @@ namespace App\Http\Requests\RealEstate;
 
 use App\Enums\RealEstateType;
 use App\Http\Requests\FormRequestJSON;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
+use JetBrains\PhpStorm\ArrayShape;
 
-class CreateApartment extends FormRequestJSON
+class CreateHouse extends FormRequestJSON
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,25 +24,22 @@ class CreateApartment extends FormRequestJSON
      *
      * @return array
      */
+    #[ArrayShape([
+        'address' => "string",
+        'city_id' => "string",
+        'number' => "string",
+        'floors_total_number' => "string",
+        'residential_complex_id' => "array",
+        'residential_complex_name' => "string"
+    ])]
     public function rules(): array
     {
         $rules = [
             'address' => 'required|string|max:255',
             'city_id' => 'required|integer|exists:cities,id',
-            'apartment_number' => 'required|string',
-            'floor_number' => 'integer',
-            'entrance' => 'string',
+            'house_number' => 'required|string',
+            'floors_total_number' => 'integer'
         ];
-
-        if ($this->has('house_id')) {
-            $rules['house_id'] = ['required', 'integer',
-                Rule::exists('real_estates', 'id')
-                    ->where('type_id', RealEstateType::house)
-            ];
-        } else {
-            $rules['house_number'] = 'required|string';
-            $rules['house_floors_total_number'] = 'integer';
-        }
 
         if ($this->has('residential_complex_id')) {
             $rules['residential_complex_id'] = ['required', 'integer',

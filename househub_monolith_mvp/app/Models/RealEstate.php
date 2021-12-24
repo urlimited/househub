@@ -17,7 +17,5 @@ abstract class RealEstate
     abstract public function beforeDelete();
     abstract public function beforeUpdate();
 
-    public function publish(){
-
-    }
+    abstract public function publish();
 }
