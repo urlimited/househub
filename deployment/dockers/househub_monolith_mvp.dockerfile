@@ -1,11 +1,15 @@
 FROM php:8.1.0-fpm
 
 # Install Xdebug
-RUN pecl install xdebug \
-    && docker-php-ext-enable xdebug
+#RUN pecl install xdebug \
+#    && docker-php-ext-enable xdebug \
+#    && echo "zend_extension=$(find $(php-config --extension-dir) -name xdebug.so)" \
+#             > /usr/local/etc/php/conf.d/xdebug.ini \
+#    && echo "xdebug.mode=debug" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
+#    && echo "xdebug.client_host = host.docker.internal" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
-RUN echo "zend_extension=$(find $(php-config --extension-dir) -name xdebug.so)" \
-             > /usr/local/etc/php/conf.d/xdebug.ini
+#RUN echo "zend_extension=$(find $(php-config --extension-dir) -name xdebug.so)" \
+#             > /usr/local/etc/php/conf.d/xdebug.ini
 
 RUN docker-php-ext-install mysqli pdo pdo_mysql sockets
 RUN docker-php-ext-enable pdo_mysql sockets

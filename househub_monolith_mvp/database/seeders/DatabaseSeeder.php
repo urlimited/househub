@@ -2,7 +2,10 @@
 
 namespace Database\Seeders;
 
+use Database\Seeders\testing\TestingRealEstateSeeder;
+use Database\Seeders\testing\TestingUserSeeder;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\App;
 
 class DatabaseSeeder extends Seeder
 {
@@ -13,7 +16,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $this->call([
+        $seeders = [
             UserStatusSeeder::class,
             RoleSeeder::class,
             ContactInformationTypeSeeder::class,
@@ -25,6 +28,13 @@ class DatabaseSeeder extends Seeder
             CitySeeder::class,
             RealEstateTypeSeeder::class,
             ResidentialComplexRealEstateSeeder::class
-        ]);
+        ];
+
+        if(App::environment('testing')){
+            $seeders[] = TestingRealEstateSeeder::class;
+            $seeders[] = TestingUserSeeder::class;
+        }
+
+        $this->call($seeders);
     }
 }

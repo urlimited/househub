@@ -3,7 +3,6 @@
 namespace Tests\Feature\http\register;
 
 use App\Enums\AuthCodeType;
-use Database\Seeders\testing\TestingUserSeeder;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
@@ -21,8 +20,6 @@ class SendConfirmationPhoneCallTest extends TestCase
         $data = [
             'phone' => '+77771557027'
         ];
-
-        $this->seed(TestingUserSeeder::class);
 
         $userId = DB::table('users')->where('login', $data['phone'])->first()->id;
 

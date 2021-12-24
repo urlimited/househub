@@ -4,7 +4,6 @@ namespace Tests\Feature\http\register;
 
 use App\Enums\TokenType;
 use App\Enums\UserStatus;
-use Database\Seeders\testing\TestingUserSeeder;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
@@ -20,8 +19,6 @@ class ConfirmPhoneAuthCodeTest extends TestCase
             'phone' => '+77771557027',
             'code' => '1111'
         ];
-
-        $this->seed(TestingUserSeeder::class);
 
         $userId = DB::table('users')->where('login', $data['phone'])->first()->id;
 
