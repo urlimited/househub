@@ -32,7 +32,7 @@ final class UserModelDTO extends BaseModelDTO
             $data = self::modelToArray($data);
 
         $dataProcessed = collect($data)->reduce(function ($accum, $nextValue, $nextKey) {
-            return array_merge($accum, [Str::snake($nextKey) => $nextValue]);
+            return [...$accum, Str::snake($nextKey) => $nextValue];
         }, []);
 
         $processedUserData = collect($dataProcessed)->filter(function ($val, $key) {

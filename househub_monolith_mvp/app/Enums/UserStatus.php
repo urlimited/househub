@@ -15,4 +15,5 @@ final class UserStatus extends Enum
     const approved = 2;
     const blocked = 3;
     const loginConfirmed = 4;
+    const deleted = 5;
 }

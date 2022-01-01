@@ -2,6 +2,14 @@
 
 namespace App\Repositories\Entities;
 
+/**
+ * @property int $id
+ * @property string $password
+ * @property string $firstName
+ * @property string $lastName
+ * @property string $login
+ * @property int $roleId
+ */
 class UserEntity extends BaseModel
 {
     public $timestamps = false;

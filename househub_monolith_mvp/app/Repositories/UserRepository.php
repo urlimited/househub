@@ -46,7 +46,12 @@ final class UserRepository implements UserRepositoryContract
                 'user_id' => $userData->userEntityData['id']
             ]);
 
-        // TODO: update contact information
+        foreach ($userData->contactInformationEntityData as $info) {
+            ContactInformationEntity::updateOrCreate(
+                [
+                    'type_id' => $info['type_id'], 'user_id' => $userData->userEntityData['id']
+                ], $info);
+        }
 
         $updatedUser = (UserEntity::findOrFail($userData->userEntityData['id']))
             ->fill($userData->userEntityData);
@@ -63,18 +68,39 @@ final class UserRepository implements UserRepositoryContract
         );
     }
 
-    public function softDelete(UserModelDTO $userData): User
+    public function softDelete(int $id): User
     {
-        //UserEntity::find($userData->id)->update();
+        UserStatusHistoryEntity::create([
+            'status_id' => UserStatus::deleted,
+            'user_id' => $id
+        ]);
 
-        return new User();
+        $userEntity = UserEntity::findOrFail($id);
+
+        return new User(
+            id: $id,
+            firstName: $userEntity->firstName,
+            lastName: $userEntity->lastName,
+            phone: $userEntity->login,
+            roleId: $userEntity->roleId,
+            statusId: UserStatus::deleted
+        );
     }
 
-    public function delete(UserModelDTO $userData): User
+    public function delete(int $id): User
     {
-        // TODO: Implement delete() method.
+        $userEntity = UserEntity::findOrFail($id);
 
-        return new User();
+        $userEntity->delete();
+
+        return new User(
+            id: $id,
+            firstName: $userEntity->firstName,
+            lastName: $userEntity->lastName,
+            phone: $userEntity->login,
+            roleId: $userEntity->roleId,
+            statusId: UserStatus::deleted
+        );
     }
 
     public function find(int $id): User

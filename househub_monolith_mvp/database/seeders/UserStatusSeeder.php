@@ -19,7 +19,8 @@ class UserStatusSeeder extends Seeder
             'registered',
             'approved',
             'blocked',
-            'phone confirmed'
+            'phone confirmed',
+            'deleted'
         ];
 
         foreach ($statuses as $status) {
