@@ -20,4 +20,8 @@ final class RealEstateEntity extends BaseModel
         'parent_id',
         'type_id'
     ];
+
+    protected $casts = [
+        'deleted_at' => 'datetime'
+    ];
 }

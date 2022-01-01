@@ -19,7 +19,8 @@ class CreateRealEstateAttributes extends Migration
             $table->string('key')->nullable(false);
             $table->string('value')->nullable(true);
 
-            $table->foreign('real_estate_id')->references('id')->on('real_estates');
+            $table->foreign('real_estate_id')->references('id')->on('real_estates')
+                ->onDelete('cascade');
 
             $table->index('real_estate_id');
         });

@@ -17,4 +17,8 @@ final class NotificatorEntity extends BaseModel
         'type_id',
         'value'
     ];
+
+    protected $casts = [
+        'deleted_at' => 'datetime'
+    ];
 }

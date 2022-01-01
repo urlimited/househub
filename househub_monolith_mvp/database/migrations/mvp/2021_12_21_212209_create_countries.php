@@ -16,6 +16,7 @@ class CreateCountries extends Migration
         Schema::create('countries', function (Blueprint $table) {
             $table->unsignedInteger('id')->autoIncrement();
             $table->string('name')->nullable(false);
+            $table->timestamp('deleted_at')->nullable(true);
         });
     }
 

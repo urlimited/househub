@@ -28,7 +28,7 @@ final class UserModelDTO extends BaseModelDTO
         $contactInformationEntityData = [];
         $statusEntityData = [];
 
-        if($data instanceof User)
+        if ($data instanceof User)
             $data = self::modelToArray($data);
 
         $dataProcessed = collect($data)->reduce(function ($accum, $nextValue, $nextKey) {
@@ -76,6 +76,11 @@ final class UserModelDTO extends BaseModelDTO
             contactInformationEntityData: $contactInformationEntityData,
             statusEntityData: $statusEntityData
         );
+    }
+
+    static public function repositoryDeleteData(array|User $data): static
+    {
+        return new self();
     }
 
     #[ArrayShape([

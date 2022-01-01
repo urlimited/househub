@@ -63,14 +63,14 @@ final class UserRepository implements UserRepositoryContract
         );
     }
 
-    public function softDelete(): User
+    public function softDelete(UserModelDTO $userData): User
     {
-        // TODO: Implement softDelete() method.
+        //UserEntity::find($userData->id)->update();
 
         return new User();
     }
 
-    public function delete(): User
+    public function delete(UserModelDTO $userData): User
     {
         // TODO: Implement delete() method.
 

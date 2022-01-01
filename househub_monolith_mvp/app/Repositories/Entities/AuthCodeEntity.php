@@ -24,4 +24,8 @@ final class AuthCodeEntity extends BaseModel
         'code',
         'sent_at'
     ];
+
+    protected $casts = [
+        'sent_at' => 'datetime'
+    ];
 }

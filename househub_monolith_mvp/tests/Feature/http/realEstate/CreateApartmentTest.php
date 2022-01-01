@@ -117,4 +117,6 @@ class CreateApartmentTest extends TestCase
             'real_estate_id' => $apartment['house_id']
         ]);
     }
+
+    // TODO: create apartment without residential complex id
 }

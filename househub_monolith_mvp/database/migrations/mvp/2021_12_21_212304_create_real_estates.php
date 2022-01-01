@@ -19,6 +19,7 @@ class CreateRealEstates extends Migration
             $table->unsignedInteger('city_id');
             $table->unsignedInteger('parent_id')->nullable(true);
             $table->unsignedInteger('type_id')->nullable(false);
+            $table->timestamp('deleted_at')->nullable(true);
 
             $table->foreign('city_id')->references('id')->on('cities');
             $table->foreign('parent_id')->references('id')->on('real_estates');

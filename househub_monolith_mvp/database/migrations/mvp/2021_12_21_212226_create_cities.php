@@ -17,6 +17,7 @@ class CreateCities extends Migration
             $table->unsignedInteger('id')->autoIncrement();
             $table->string('name')->nullable(false);
             $table->unsignedInteger('country_id');
+            $table->timestamp('deleted_at')->nullable(true);
 
             $table->foreign('country_id')->references('id')->on('countries')->onDelete('cascade');
         });

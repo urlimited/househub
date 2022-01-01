@@ -28,10 +28,92 @@ final class RealEstateRepository implements RealEstateRepositoryContract
             ]);
         }
 
-        return match ($realEstate->typeId) {
+        return $this->identifyRealEstate(
+            realEstateAttributes: $realEstateData->realEstateAttributes,
+            realEstate: $realEstate
+        );
+    }
+
+    public function update(RealEstateModelDTO $realEstateData): RealEstate
+    {
+        $realEstate = RealEstateEntity::findOrFail($realEstateData->realEstateData['id']);
+
+        RealEstateEntity::update($realEstateData->realEstateData);
+
+        foreach ($realEstateData->realEstateAttributes as $key => $attribute) {
+            RealEstateAttributeEntity::updateOrCreate([
+                'real_estate_id' => $realEstate->id,
+                'key' => $key
+            ], ['value' => $attribute]);
+        }
+
+        return $this->identifyRealEstate(
+            realEstateAttributes: $realEstateData->realEstateAttributes,
+            realEstate: $realEstate
+        );
+    }
+
+    public function softDelete(int $id): RealEstate
+    {
+        $realEstate = RealEstateEntity::findOrFail($id);
+
+        $realEstateAttributes = RealEstateAttributeEntity::where(['real_estate_id' => $id])
+            ->get()->reduce(
+                function (array $accum, $realEstateAttribute) {
+                    return [...$accum, $realEstateAttribute->key => $realEstateAttribute->value];
+                }, []);
+
+        $realEstate->update(['deleted_at' => now()]);
+
+        return $this->identifyRealEstate(
+            realEstateAttributes: $realEstateAttributes,
+            realEstate: $realEstate
+        );
+    }
+
+    public function delete(int $id): RealEstate
+    {
+        $realEstate = RealEstateEntity::findOrFail($id);
+
+        $realEstateAttributes = RealEstateAttributeEntity::where(['real_estate_id' => $id])
+            ->get()->reduce(
+                function (array $accum, $realEstateAttribute) {
+                    return [...$accum, $realEstateAttribute->key => $realEstateAttribute->value];
+                }, []);
+
+        $realEstate->delete();
+
+        return $this->identifyRealEstate(
+            realEstateAttributes: $realEstateAttributes,
+            realEstate: $realEstate
+        );
+    }
+
+    public function find(int $id): RealEstate
+    {
+        $realEstate = RealEstateEntity::findOrFail($id);
+
+        $realEstateAttributes = RealEstateAttributeEntity::where(['real_estate_id' => $id])
+            ->get()->reduce(
+                function (array $accum, $realEstateAttribute) {
+                    return [...$accum, $realEstateAttribute->key => $realEstateAttribute->value];
+                }, []);
+
+        return $this->identifyRealEstate(
+            realEstateAttributes: $realEstateAttributes,
+            realEstate: $realEstate
+        );
+    }
+
+    private function identifyRealEstate(
+        array            $realEstateAttributes,
+        RealEstateEntity $realEstate
+    ): RealEstate
+    {
+        return match ($realEstate['type_id']) {
             RealEstateType::residentialComplex => new ResidentialComplexRealEstate(
                 ...[
-                    ...collect($realEstateData->realEstateAttributes)
+                    ...collect($realEstateAttributes)
                         ->reduce(function ($accum, $nextValue, $nextKey) {
                             return [...$accum, Str::camel($nextKey) => $nextValue];
                         }, []),
@@ -43,7 +125,7 @@ final class RealEstateRepository implements RealEstateRepositoryContract
             ),
             RealEstateType::house => new HouseRealEstate(
                 ...[
-                    ...collect($realEstateData->realEstateAttributes)
+                    ...collect($realEstateAttributes)
                         ->reduce(function ($accum, $nextValue, $nextKey) {
                             return [...$accum, Str::camel($nextKey) => $nextValue];
                         }, []),
@@ -55,7 +137,7 @@ final class RealEstateRepository implements RealEstateRepositoryContract
             ),
             RealEstateType::apartment => new ApartmentRealEstate(
                 ...[
-                    ...collect($realEstateData->realEstateAttributes)
+                    ...collect($realEstateAttributes)
                         ->reduce(function ($accum, $nextValue, $nextKey) {
                             return [...$accum, Str::camel($nextKey) => $nextValue];
                         }, []),
@@ -68,29 +150,5 @@ final class RealEstateRepository implements RealEstateRepositoryContract
             ),
             default => null,
         };
-    }
-
-    public function update(RealEstateModelDTO $realEstateData): RealEstate
-    {
-        return new HouseRealEstate();
-    }
-
-    public function softDelete(): RealEstate
-    {
-        // TODO: Implement softDelete() method.
-
-        return new HouseRealEstate();
-    }
-
-    public function delete(): RealEstate
-    {
-        // TODO: Implement delete() method.
-
-        return new HouseRealEstate();
-    }
-
-    public function find(int $id): RealEstate
-    {
-        return new HouseRealEstate();
     }
 }

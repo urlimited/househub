@@ -17,6 +17,7 @@ class CreateNotificators extends Migration
             $table->unsignedInteger('id')->autoIncrement();
             $table->unsignedInteger('type_id');
             $table->string('value');
+            $table->timestamp('deleted_at')->nullable(true);
 
             $table->foreign('type_id')->references('id')->on('notificator_types')->onDelete('cascade');
         });
