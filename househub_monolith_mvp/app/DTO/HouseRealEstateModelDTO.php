@@ -3,6 +3,7 @@
 namespace App\DTO;
 
 use App\Enums\RealEstateType;
+use Exception;
 use JetBrains\PhpStorm\Pure;
 
 final class HouseRealEstateModelDTO extends RealEstateModelDTO
@@ -23,6 +24,40 @@ final class HouseRealEstateModelDTO extends RealEstateModelDTO
 
         if(key_exists('house_floors_total_number', $data))
             $realEstateAttributes['floors_total_number'] = $data['house_floors_total_number'];
+
+        return new HouseRealEstateModelDTO(
+            realEstateData: $realEstateData,
+            realEstateAttributes: $realEstateAttributes
+        );
+    }
+
+    /**
+     * @throws Exception
+     */
+    static public function repositoryUpdateData(array $data): static
+    {
+        if(!key_exists('id', $data))
+            throw new Exception('id is not presented in Data array for repositoryUpdateData method');
+
+        $realEstateData = [
+            'id' => $data['id']
+        ];
+
+        $realEstateAttributes = [];
+
+        foreach($data as $key => $value){
+            if($key == 'house_number') {
+                $realEstateAttributes[$key] = $value;
+            } else if (in_array($key, ['address', 'city_id'])) {
+                $realEstateData[$key] = $value;
+            } else {
+                if($key === 'residential_complex_id')
+                    $realEstateData['parent_id'] = $value;
+
+                if($key === 'house_floors_total_number')
+                    $realEstateAttributes['floors_total_number'] = $value;
+            }
+        }
 
         return new HouseRealEstateModelDTO(
             realEstateData: $realEstateData,

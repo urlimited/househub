@@ -24,4 +24,5 @@ abstract class RealEstateModelDTO extends BaseModelDTO
 
     #[Pure]
     abstract static public function repositoryCreateData(array $data): static;
+    abstract static public function repositoryUpdateData(array $data): static;
 }
