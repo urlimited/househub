@@ -27,7 +27,8 @@ final class RegisterController extends Controller
             return response()->json(data: $result, status: 200);
         } catch (Exception $e) {
             return response()->json(data: [
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
+                'stack' => $e->getTrace()
             ], status: 500);
         }
     }
@@ -50,7 +51,8 @@ final class RegisterController extends Controller
             ], status: 429);
         } catch (Exception $e) {
             return response()->json(data: [
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
+                'stack' => $e->getTrace()
             ], status: 500);
         }
 
@@ -77,7 +79,8 @@ final class RegisterController extends Controller
                 ], status: 422);
         } catch (Exception $e) {
             return response()->json(data: [
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
+                'stack' => $e->getTrace()
             ], status: 500);
         }
 

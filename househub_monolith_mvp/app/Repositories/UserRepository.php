@@ -47,10 +47,16 @@ final class UserRepository implements UserRepositoryContract
             ]);
 
         foreach ($userData->contactInformationEntityData as $info) {
-            ContactInformationEntity::updateOrCreate(
-                [
-                    'type_id' => $info['type_id'], 'user_id' => $userData->userEntityData['id']
-                ], $info);
+            if ($info['value'] === null)
+                ContactInformationEntity::where([
+                    'type_id' => $info['type_id'],
+                    'user_id' => $userData->userEntityData['id']
+                ])->firstOrFail()->delete();
+            else
+                ContactInformationEntity::updateOrCreate(
+                    [
+                        'type_id' => $info['type_id'], 'user_id' => $userData->userEntityData['id']
+                    ], $info);
         }
 
         $updatedUser = (UserEntity::findOrFail($userData->userEntityData['id']))

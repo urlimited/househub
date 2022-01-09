@@ -25,6 +25,8 @@ class SendConfirmationPhoneCallTest extends TestCase
 
         $response = $this->json(method: 'post', uri: '/api/auth/auth_code', data: $data);
 
+        dd($response->getContent());
+
         $response->assertStatus(201);
 
         $this->assertDatabaseHas(table: 'auth_codes', data: [

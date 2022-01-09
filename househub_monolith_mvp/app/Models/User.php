@@ -65,7 +65,8 @@ class User
         $token = config('services.twilio.auth_token');
         $twilio = new Client($sid, $token);
 
-        $twilio->calls
+        //TODO: handle twilio cash shortage and connection errors
+        $result = $twilio->calls
             ->create($this->phone,
                 $fromPhone,
                 [

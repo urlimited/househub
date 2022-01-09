@@ -56,6 +56,21 @@ final class RegisterUseCase
     }
 
     /**
+     * @param array $companyData
+     * @return void
+     * @throws Exception
+     */
+    public function requestForRegistrationServiceCompany(array $companyData)
+    {
+        $userData['role_id'] = Role::serviceCompanyDirector;
+        $userData['status_id'] = UserStatus::registered;
+
+        $user = $this->userRepository->create(UserModelDTO::prepareDataToRepository($companyData));
+
+        return $user->publish();
+    }
+
+    /**
      * @param array $userData
      * @return UseCaseResult
      * @throws Exception
@@ -83,7 +98,7 @@ final class RegisterUseCase
 
             return new UseCaseResult(status: UseCaseResult::StatusSuccess);
         } catch (TwilioException|ConfigurationException $exception) {
-            // TODO: handle twilio cash shortage
+            // TODO: handle twilio cash shortage and connection error
             return new UseCaseResult(status: UseCaseResult::StatusFail, message: "configuration error");
         } catch (AllNotificatorsUsedException $exception) {
             return new UseCaseResult(status: UseCaseResult::StatusFail, message: "all phones are out, wait 5 minutes");
@@ -109,8 +124,11 @@ final class RegisterUseCase
 
             $user->setAuthCode($authCode);
 
-            if($user->isAuthCodeValid($data['code'])){
-                $this->userRepository->update(UserModelDTO::prepareDataToRepository($user));
+            if ($user->isAuthCodeValid($data['code'])) {
+                $this->userRepository->update(UserModelDTO::prepareDataToRepository([
+                    'id' => $user->id,
+                    'status_id' => $user->statusId
+                ]));
 
                 $accessToken = $this->tokenRepository->create(Token::generate($user->id)->toDB());
 

@@ -23,7 +23,7 @@ class RegisterResidentUserTest extends TestCase
         $data = [
             'first_name' => 'Bob',
             'last_name' => 'Willson',
-            'phone' => '+77771557027'
+            'phone' => '+77771557028'
         ];
 
         $response = $this->json(method: 'post', uri: '/api/auth/register', data: $data);
@@ -34,7 +34,7 @@ class RegisterResidentUserTest extends TestCase
             "data" => [
                 "first_name" => "Bob",
                 "last_name" => "Willson",
-                "phone" => "+77771557027",
+                "phone" => "+77771557028",
                 "role_id" => 1,
                 "role" => "resident",
                 "status_id" => 1,
@@ -48,7 +48,7 @@ class RegisterResidentUserTest extends TestCase
             "id" => $userId,
             "first_name" => "Bob",
             "last_name" => "Willson",
-            "login" => "+77771557027",
+            "login" => "+77771557028",
             "role_id" => Role::resident
         ]);
 

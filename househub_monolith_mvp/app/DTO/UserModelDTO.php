@@ -22,6 +22,7 @@ final class UserModelDTO extends BaseModelDTO
     /**
      * @throws Exception
      */
+    //TODO: divide this into update and create methods (why? in order to check existence of id property)
     static public function prepareDataToRepository(array|User $data): static
     {
         $userEntityData = [];
