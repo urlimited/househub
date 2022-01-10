@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Contracts\Services\TokenServiceContract;
-use App\Models\User;
+use App\Models\ResidentUser;
 use Exception;
 use Twilio\Jwt\JWT;
 

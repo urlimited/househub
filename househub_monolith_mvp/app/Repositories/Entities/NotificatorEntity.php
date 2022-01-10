@@ -8,7 +8,7 @@ use DateTime;
  * @method static create(array $data)
  * @method static where()
  */
-final class NotificatorEntity extends BaseModel
+final class NotificatorEntity extends BaseEntity
 {
     protected $table = 'notificators';
 

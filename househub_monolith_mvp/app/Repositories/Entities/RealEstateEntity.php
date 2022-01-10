@@ -9,7 +9,7 @@ namespace App\Repositories\Entities;
  * @property int $parentId
  * @property int $typeId
  */
-final class RealEstateEntity extends BaseModel
+final class RealEstateEntity extends BaseEntity
 {
     protected $table = 'real_estates';
 

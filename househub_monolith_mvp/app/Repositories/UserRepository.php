@@ -5,7 +5,7 @@ namespace App\Repositories;
 use App\Contracts\Repositories\UserRepositoryContract;
 use App\DTO\UserModelDTO;
 use App\Enums\UserStatus;
-use App\Models\User;
+use App\Models\ResidentUser;
 use App\Repositories\Entities\ContactInformationEntity;
 use App\Repositories\Entities\UserEntity as UserEntity;
 use App\Repositories\Entities\UserStatusHistoryEntity;
@@ -13,7 +13,7 @@ use App\Repositories\Entities\UserStatusHistoryEntity;
 final class UserRepository implements UserRepositoryContract
 {
 
-    public function create(UserModelDTO $userData): User
+    public function create(UserModelDTO $userData): ResidentUser
     {
         $userId = UserEntity::create($userData->userEntityData)->id;
 
@@ -26,7 +26,7 @@ final class UserRepository implements UserRepositoryContract
             ContactInformationEntity::create([...$info, 'user_id' => $userId]);
         }
 
-        return new User(
+        return new ResidentUser(
             id: $userId,
             firstName: $userData->userEntityData['first_name'],
             lastName: $userData->userEntityData['last_name'],
@@ -36,7 +36,7 @@ final class UserRepository implements UserRepositoryContract
         );
     }
 
-    public function update(UserModelDTO $userData): User
+    public function update(UserModelDTO $userData): ResidentUser
     {
         $statusEntity = UserStatusHistoryEntity::findByUserId($userData->userEntityData['id']);
 
@@ -64,7 +64,7 @@ final class UserRepository implements UserRepositoryContract
 
         $updatedUser->save();
 
-        return new User(
+        return new ResidentUser(
             id: $updatedUser->id,
             firstName: $updatedUser->firstName,
             lastName: $updatedUser->lastName,
@@ -74,7 +74,7 @@ final class UserRepository implements UserRepositoryContract
         );
     }
 
-    public function softDelete(int $id): User
+    public function softDelete(int $id): ResidentUser
     {
         UserStatusHistoryEntity::create([
             'status_id' => UserStatus::deleted,
@@ -83,7 +83,7 @@ final class UserRepository implements UserRepositoryContract
 
         $userEntity = UserEntity::findOrFail($id);
 
-        return new User(
+        return new ResidentUser(
             id: $id,
             firstName: $userEntity->firstName,
             lastName: $userEntity->lastName,
@@ -93,13 +93,13 @@ final class UserRepository implements UserRepositoryContract
         );
     }
 
-    public function delete(int $id): User
+    public function delete(int $id): ResidentUser
     {
         $userEntity = UserEntity::findOrFail($id);
 
         $userEntity->delete();
 
-        return new User(
+        return new ResidentUser(
             id: $id,
             firstName: $userEntity->firstName,
             lastName: $userEntity->lastName,
@@ -109,13 +109,13 @@ final class UserRepository implements UserRepositoryContract
         );
     }
 
-    public function find(int $id): User
+    public function find(int $id): ResidentUser
     {
         $userData = UserEntity::findOrFail($id)->toArray();
 
         $statusData = UserStatusHistoryEntity::findByUserId($id);
 
-        return new User(
+        return new ResidentUser(
             id: $userData['id'],
             firstName: $userData['first_name'],
             lastName: $userData['last_name'],
@@ -125,13 +125,13 @@ final class UserRepository implements UserRepositoryContract
         );
     }
 
-    public function findByLogin(string $login): User
+    public function findByLogin(string $login): ResidentUser
     {
         $userData = UserEntity::where('login', $login)->firstOrFail()->toArray();
 
         $statusData = UserStatusHistoryEntity::findByUserId($userData['id']);
 
-        return new User(
+        return new ResidentUser(
             id: $userData['id'],
             firstName: $userData['first_name'],
             lastName: $userData['last_name'],

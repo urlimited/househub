@@ -3,7 +3,7 @@
 namespace App\DTO;
 
 use App\Enums\ContactInformationType;
-use App\Models\User;
+use App\Models\ResidentUser;
 use Exception;
 use Illuminate\Support\Str;
 use JetBrains\PhpStorm\ArrayShape;
@@ -23,13 +23,13 @@ final class UserModelDTO extends BaseModelDTO
      * @throws Exception
      */
     //TODO: divide this into update and create methods (why? in order to check existence of id property)
-    static public function prepareDataToRepository(array|User $data): static
+    static public function prepareDataToRepository(array|ResidentUser $data): static
     {
         $userEntityData = [];
         $contactInformationEntityData = [];
         $statusEntityData = [];
 
-        if ($data instanceof User)
+        if ($data instanceof ResidentUser)
             $data = self::modelToArray($data);
 
         $dataProcessed = collect($data)->reduce(function ($accum, $nextValue, $nextKey) {
@@ -79,7 +79,7 @@ final class UserModelDTO extends BaseModelDTO
         );
     }
 
-    static public function repositoryDeleteData(array|User $data): static
+    static public function repositoryDeleteData(array|ResidentUser $data): static
     {
         return new self();
     }
@@ -93,7 +93,7 @@ final class UserModelDTO extends BaseModelDTO
         'role_id' => "int",
         'status_id' => "int"
     ])]
-    static protected function modelToArray(User $user): array
+    static protected function modelToArray(ResidentUser $user): array
     {
         return [
             ...collect(get_object_vars($user))->reduce(function ($accum, $nextValue, $nextKey) {

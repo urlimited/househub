@@ -6,7 +6,7 @@ use App\Contracts\Repositories\NotificatorRepositoryContract;
 use App\Enums\NotificatorType;
 use App\Exceptions\AllNotificatorsUsedException;
 use App\Models\Notificator;
-use App\Models\User;
+use App\Models\ResidentUser;
 use App\Repositories\Entities\NotificatorEntity;
 
 class NotificatorRepository implements NotificatorRepositoryContract
@@ -53,9 +53,9 @@ class NotificatorRepository implements NotificatorRepositoryContract
      * @return array<Notificator>
      * @throws AllNotificatorsUsedException
      */
-    public function getNotUsedNotificatorsBy(int|User $user, int $type = NotificatorType::call): array
+    public function getNotUsedNotificatorsBy(int|ResidentUser $user, int $type = NotificatorType::call): array
     {
-        if ($user instanceof User)
+        if ($user instanceof ResidentUser)
             $user = $user->id;
 
         $notificators = NotificatorEntity::where('type_id', $type)

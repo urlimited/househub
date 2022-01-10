@@ -2,7 +2,7 @@
 
 namespace App\Contracts\Services;
 
-use App\Models\User;
+use App\Models\ResidentUser;
 
 interface TokenServiceContract
 {

@@ -10,7 +10,7 @@ use Carbon\Carbon;
  * @property int $statusId
  * @property Carbon $savedAt
  */
-final class UserStatusHistoryEntity extends BaseModel
+final class UserStatusHistoryEntity extends BaseEntity
 {
     public $timestamps = false;
 

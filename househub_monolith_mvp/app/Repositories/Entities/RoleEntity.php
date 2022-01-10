@@ -2,7 +2,7 @@
 
 namespace App\Repositories\Entities;
 
-class RoleEntity extends BaseModel
+class RoleEntity extends BaseEntity
 {
     public $timestamps = false;
 

@@ -8,7 +8,7 @@ namespace App\Repositories\Entities;
  * @property string $key
  * @property string $value
  */
-final class RealEstateAttributeEntity extends BaseModel
+final class RealEstateAttributeEntity extends BaseEntity
 {
     protected $table = 'real_estate_attributes';
 

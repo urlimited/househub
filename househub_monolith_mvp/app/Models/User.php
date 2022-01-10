@@ -9,11 +9,14 @@ use Illuminate\Support\Str;
 use JetBrains\PhpStorm\ArrayShape;
 use Twilio\Exceptions\ConfigurationException;
 use Twilio\Exceptions\TwilioException;
-use Twilio\Jwt\JWT;
 use Twilio\Rest\Client;
 
-class User
+abstract class User extends BaseModel
 {
+    protected array $publishable = [
+        'id', 'first_name', 'last_name', 'phone', 'role_id', 'status_id', 'email'
+    ];
+
     public function __construct(
         public int          $id,
         public string       $firstName,
@@ -39,20 +42,12 @@ class User
         'role' => "string",
         'status' => "mixed"
     ])]
-    public function publish(): array
+    public function publish(array $additionalData = []): array
     {
-        return [
-            ...collect(get_object_vars($this))->filter(function ($val, $key) {
-                return collect([
-                    'id', 'first_name', 'last_name', 'phone', 'role_id', 'status_id'
-                ])->contains(Str::snake($key));
-            })->reduce(function ($accum, $nextValue, $nextKey) {
-                return [...$accum, Str::snake($nextKey) => $nextValue];
-            }, []),
-
+        return parent::publish([
             'role' => Role::getKey($this->roleId),
-            'status' => UserStatus::getKey($this->statusId),
-        ];
+            'status' => UserStatus::getKey($this->statusId)
+        ]);
     }
 
     /**
@@ -103,9 +98,5 @@ class User
             $this->statusId = UserStatus::loginConfirmed;
 
         return $this->authCode->code === $toValidateAuthCode;
-    }
-
-    public function generateAccessToken () {
-
     }
 }

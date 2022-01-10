@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Builder;
 /**
  * @mixin Builder
  */
-class BaseModel extends Model
+abstract class BaseEntity extends Model
 {
     public $timestamps = false;
 

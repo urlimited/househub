@@ -12,7 +12,7 @@ use Carbon\Carbon;
  * @property string code
  * @property Carbon sentAt
  */
-final class AuthCodeEntity extends BaseModel
+final class AuthCodeEntity extends BaseEntity
 {
     protected $table = 'auth_codes';
 

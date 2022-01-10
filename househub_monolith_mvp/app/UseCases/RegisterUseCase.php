@@ -115,8 +115,6 @@ final class RegisterUseCase
         try {
             $user = $this->userRepository->findByLogin($data['phone']);
 
-            $user->generateAccessToken();
-
             if ($user->isBlocked())
                 throw new Exception('User is blocked');
 

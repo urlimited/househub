@@ -9,7 +9,7 @@ namespace App\Repositories\Entities;
  * @property int value
  * @property string savedAt
  */
-final class TokenEntity extends BaseModel
+final class TokenEntity extends BaseEntity
 {
     protected $table = 'tokens';
 

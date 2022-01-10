@@ -4,7 +4,7 @@ namespace App\Contracts\Repositories;
 
 use App\Exceptions\AllNotificatorsUsedException;
 use App\Models\Notificator;
-use App\Models\User;
+use App\Models\ResidentUser;
 
 interface NotificatorRepositoryContract
 {
@@ -15,9 +15,9 @@ interface NotificatorRepositoryContract
     public function find(int $id): Notificator;
 
     /**
-     * @param int|User $user
-     * @throws AllNotificatorsUsedException
+     * @param int|ResidentUser $user
      * @return array
+     *@throws AllNotificatorsUsedException
      */
-    public function getNotUsedNotificatorsBy(int|User $user): array;
+    public function getNotUsedNotificatorsBy(int|ResidentUser $user): array;
 }
