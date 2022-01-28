@@ -9,6 +9,7 @@ use App\UseCases\RealEstateUseCase;
 use App\UseCases\UseCaseResult;
 use Exception;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\App;
 
 final class RealEstateController extends Controller
 {
@@ -17,7 +18,7 @@ final class RealEstateController extends Controller
         try {
             $this->validateIsHeaderContentTypeApplicationJSON($request);
 
-            $useCase = new RealEstateUseCase();
+            $useCase = App::make(RealEstateUseCase::class);
 
             $result = $useCase->createApartmentRealEstate($request->all());
 
@@ -43,7 +44,7 @@ final class RealEstateController extends Controller
         try {
             $this->validateIsHeaderContentTypeApplicationJSON($request);
 
-            $useCase = new RealEstateUseCase();
+            $useCase = App::make(RealEstateUseCase::class);
 
             $result = $useCase->createHouseRealEstate($request->all());
 
@@ -69,7 +70,7 @@ final class RealEstateController extends Controller
         try {
             $this->validateIsHeaderContentTypeApplicationJSON($request);
 
-            $useCase = new RealEstateUseCase();
+            $useCase = App::make(RealEstateUseCase::class);
 
             $result = $useCase->createResidentialComplexRealEstate($request->all());
 

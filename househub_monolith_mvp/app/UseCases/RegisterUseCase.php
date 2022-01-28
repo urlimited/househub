@@ -31,12 +31,17 @@ final class RegisterUseCase
     /**
      * @throws BindingResolutionException
      */
-    public function __construct()
+    public function __construct(
+        UserRepositoryContract $userRepository,
+        AuthCodeRepositoryContract $authCodeRepository,
+        NotificatorRepositoryContract $notificatorRepository,
+        TokenRepositoryContract $tokenRepository,
+    )
     {
-        $this->userRepository = app()->make(UserRepositoryContract::class);
-        $this->authCodeRepository = app()->make(AuthCodeRepositoryContract::class);
-        $this->notificatorRepository = app()->make(NotificatorRepositoryContract::class);
-        $this->tokenRepository = app()->make(TokenRepositoryContract::class);
+        $this->userRepository = $userRepository;
+        $this->authCodeRepository = $authCodeRepository;
+        $this->notificatorRepository = $notificatorRepository;
+        $this->tokenRepository = $tokenRepository;
     }
 
     /**

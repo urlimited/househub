@@ -6,18 +6,14 @@ use App\Contracts\Repositories\RealEstateRepositoryContract;
 use App\DTO\ApartmentRealEstateModelDTO;
 use App\DTO\HouseRealEstateModelDTO;
 use App\DTO\ResidentialComplexRealEstateModelDTO;
-use Illuminate\Contracts\Container\BindingResolutionException;
 
 final class RealEstateUseCase
 {
     private RealEstateRepositoryContract $realEstateRepository;
 
-    /**
-     * @throws BindingResolutionException
-     */
-    public function __construct()
+    public function __construct(RealEstateRepositoryContract $realEstateRepository)
     {
-        $this->realEstateRepository = app()->make(RealEstateRepositoryContract::class);
+        $this->realEstateRepository = $realEstateRepository;
     }
 
     public function createApartmentRealEstate(array $realEstateData): UseCaseResult

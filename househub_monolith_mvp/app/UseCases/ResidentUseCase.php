@@ -10,12 +10,9 @@ final class ResidentUseCase
 {
     private UserRepositoryContract $userRepository;
 
-    /**
-     * @throws BindingResolutionException
-     */
-    public function __construct()
+    public function __construct(UserRepositoryContract $userRepositoryContract)
     {
-        $this->userRepository = app()->make(UserRepositoryContract::class);
+        $this->userRepository = $userRepositoryContract;
     }
 
     /**

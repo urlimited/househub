@@ -11,6 +11,7 @@ use App\UseCases\UseCaseResult;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Queue\MaxAttemptsExceededException;
+use Illuminate\Support\Facades\App;
 
 final class RegisterController extends Controller
 {
@@ -19,7 +20,7 @@ final class RegisterController extends Controller
         try {
             $this->validateIsHeaderContentTypeApplicationJSON($request);
 
-            $useCase = new RegisterUseCase();
+            $useCase = App::make(RegisterUseCase::class);
 
             $result = [
                 'data' => $useCase->registerResidentUser($request->all())
@@ -38,7 +39,7 @@ final class RegisterController extends Controller
         try {
             $this->validateIsHeaderContentTypeApplicationJSON($request);
 
-            $useCase = new RegisterUseCase();
+            $useCase = App::make(RegisterUseCase::class);
 
             $result = [
                 'data' => $useCase->requestForRegistrationServiceCompany($request->all())
@@ -66,7 +67,7 @@ final class RegisterController extends Controller
         $this->validateIsHeaderContentTypeApplicationJSON($request);
 
         try {
-            $useCase = new RegisterUseCase();
+            $useCase = App::make(RegisterUseCase::class);
 
             $useCase->sendAuthenticationCall($request->all());
 
@@ -91,7 +92,7 @@ final class RegisterController extends Controller
         $this->validateIsHeaderContentTypeApplicationJSON($request);
 
         try {
-            $useCase = new RegisterUseCase();
+            $useCase = App::make(RegisterUseCase::class);
 
             $result = $useCase->confirmAuthenticationCode($request->all());
 
