@@ -2,11 +2,10 @@
 
 namespace App\Repositories\Entities;
 
-use DateTime;
-
 /**
- * @method static create(array $data)
- * @method static where()
+ * @property int $id
+ * @property int $typeId
+ * @property string $value
  */
 final class NotificatorEntity extends BaseEntity
 {

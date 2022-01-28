@@ -2,10 +2,7 @@
 
 namespace App\Repositories\Entities;
 
-/**
- * @method static create(array $data)
- */
-class ContactInformationEntity extends BaseEntity
+final class ContactInformationEntity extends BaseEntity
 {
     public $timestamps = false;
 

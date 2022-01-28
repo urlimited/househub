@@ -2,7 +2,7 @@
 
 namespace App\Repositories\Entities;
 
-class PermissionEntity extends BaseEntity
+final class PermissionEntity extends BaseEntity
 {
     public $timestamps = false;
 

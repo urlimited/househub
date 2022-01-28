@@ -2,12 +2,14 @@
 
 namespace App\Repositories\Entities;
 
+use Illuminate\Support\Carbon;
+
 /**
  * @property int id
  * @property int userId
  * @property int typeId
  * @property int value
- * @property string savedAt
+ * @property Carbon savedAt
  */
 final class TokenEntity extends BaseEntity
 {

@@ -10,7 +10,7 @@ namespace App\Repositories\Entities;
  * @property string $login
  * @property int $roleId
  */
-class UserEntity extends BaseEntity
+final class UserEntity extends BaseEntity
 {
     public $timestamps = false;
 

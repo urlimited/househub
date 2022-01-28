@@ -40,13 +40,14 @@ abstract class User extends BaseModel
         'status_id' => "int",
         'email' => "string",
         'role' => "string",
-        'status' => "mixed"
+        'status' => "string"
     ])]
     public function publish(array $additionalData = []): array
     {
         return parent::publish([
             'role' => Role::getKey($this->roleId),
-            'status' => UserStatus::getKey($this->statusId)
+            'status' => UserStatus::getKey($this->statusId),
+            ...$additionalData
         ]);
     }
 

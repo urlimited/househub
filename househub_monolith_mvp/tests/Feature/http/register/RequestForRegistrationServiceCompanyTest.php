@@ -21,7 +21,7 @@ class RequestForRegistrationServiceCompanyTest extends TestCase
     public function testStandardRequestForRegistrationServiceCompanyProcess()
     {
         $data = [
-            'first_name' => 'Bob',
+            'company_name' => 'Bob',
             'last_name' => 'Wilson',
             'phone' => '+77771557028'
         ];

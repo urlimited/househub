@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ConfirmPhoneAuthCode;
 use App\Http\Requests\RegisterResidentUser;
+use App\Http\Requests\RequestForServiceCompanyRegister;
 use App\Http\Requests\SendConfirmationPhoneCall;
 use App\UseCases\RegisterUseCase;
 use App\UseCases\UseCaseResult;
@@ -31,6 +32,33 @@ final class RegisterController extends Controller
                 'stack' => $e->getTrace()
             ], status: 500);
         }
+    }
+
+    public function requestRegistrationForServiceCompany(RequestForServiceCompanyRegister $request): JsonResponse {
+        try {
+            $this->validateIsHeaderContentTypeApplicationJSON($request);
+
+            $useCase = new RegisterUseCase();
+
+            $result = [
+                'data' => $useCase->requestForRegistrationServiceCompany($request->all())
+            ];
+
+            return response()->json(data: $result, status: 200);
+        } catch (Exception $e) {
+            return response()->json(data: [
+                'message' => $e->getMessage(),
+                'stack' => $e->getTrace()
+            ], status: 500);
+        }
+    }
+
+    public function registerServiceCompany() {
+
+    }
+
+    public function registerServiceCompanyUser() {
+
     }
 
     public function sendConfirmationPhoneCall(SendConfirmationPhoneCall $request): JsonResponse

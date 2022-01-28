@@ -7,6 +7,7 @@ use App\Contracts\Repositories\NotificatorRepositoryContract;
 use App\Contracts\Repositories\TokenRepositoryContract;
 use App\Contracts\Repositories\UserRepositoryContract;
 use App\DTO\UserModelDTO;
+use App\Enums\CompanyType;
 use App\Enums\Role;
 use App\Enums\UserStatus;
 use App\Exceptions\AllNotificatorsUsedException;
@@ -57,17 +58,22 @@ final class RegisterUseCase
 
     /**
      * @param array $companyData
-     * @return void
-     * @throws Exception
+     * @return UseCaseResult
      */
-    public function requestForRegistrationServiceCompany(array $companyData)
+    public function requestForRegistrationServiceCompany(array $companyData): UseCaseResult
     {
-        $userData['role_id'] = Role::serviceCompanyDirector;
-        $userData['status_id'] = UserStatus::registered;
+        try {
+            $companyData['type_id'] = CompanyType::serviceCompany;
 
-        $user = $this->userRepository->create(UserModelDTO::prepareDataToRepository($companyData));
+            $company = $this->companyRepository->create(ServiceCompanyModelDTO::repositoryCreateData($companyData));
 
-        return $user->publish();
+            return new UseCaseResult(
+                status: UseCaseResult::StatusSuccess,
+                content: $company->publish()
+            );
+        } catch (ModelNotFoundException) {
+            return new UseCaseResult(status: UseCaseResult::StatusFail, message: "user is not found");
+        }
     }
 
     /**
@@ -97,10 +103,10 @@ final class RegisterUseCase
             $user->callNotify($phone);
 
             return new UseCaseResult(status: UseCaseResult::StatusSuccess);
-        } catch (TwilioException|ConfigurationException $exception) {
+        } catch (TwilioException|ConfigurationException) {
             // TODO: handle twilio cash shortage and connection error
             return new UseCaseResult(status: UseCaseResult::StatusFail, message: "configuration error");
-        } catch (AllNotificatorsUsedException $exception) {
+        } catch (AllNotificatorsUsedException) {
             return new UseCaseResult(status: UseCaseResult::StatusFail, message: "all phones are out, wait 5 minutes");
         }
     }
@@ -137,7 +143,7 @@ final class RegisterUseCase
             } else {
                 return new UseCaseResult(status: UseCaseResult::StatusFail, message: "auth code is not valid");
             }
-        } catch (ModelNotFoundException $exception) {
+        } catch (ModelNotFoundException) {
             return new UseCaseResult(status: UseCaseResult::StatusFail, message: "user is not found");
         }
     }

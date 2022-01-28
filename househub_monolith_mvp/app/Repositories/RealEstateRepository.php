@@ -110,7 +110,7 @@ final class RealEstateRepository implements RealEstateRepositoryContract
         RealEstateEntity $realEstate
     ): RealEstate
     {
-        return match ($realEstate['type_id']) {
+        return match ($realEstate->typeId) {
             RealEstateType::residentialComplex => new ResidentialComplexRealEstate(
                 ...[
                     ...collect($realEstateAttributes)
