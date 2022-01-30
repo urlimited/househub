@@ -56,6 +56,11 @@ RUN useradd -u 1000 -ms /bin/bash -g www www
 #COPY --chown=www:www . /var/www
 COPY --chown=www:www househub_monolith_mvp /var/www/househub_monolith_mvp
 
+# Some configurations for PHPStan
+RUN echo -e "\n# some instructions for export" >> ~/.bashrc
+RUN echo -e "export PATH=$PATH:/var/www/househub_monolith_mvp/vendor/phpstan/phpstan/" >> ~/.bashrc
+RUN export PATH=$PATH:/var/www/househub_monolith_mvp/vendor/phpstan/phpstan/
+
 # Change current user to www
 USER www
 

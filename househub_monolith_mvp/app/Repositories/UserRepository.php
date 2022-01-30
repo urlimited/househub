@@ -31,7 +31,6 @@ final class UserRepository implements UserRepositoryContract
             firstName: $userData->userEntityData['first_name'],
             lastName: $userData->userEntityData['last_name'],
             phone: $userData->userEntityData['login'],
-            roleId: $userData->userEntityData['role_id'],
             statusId: $userData->userEntityData['status_id']
         );
     }
@@ -69,7 +68,6 @@ final class UserRepository implements UserRepositoryContract
             firstName: $updatedUser->firstName,
             lastName: $updatedUser->lastName,
             phone: $updatedUser->login,
-            roleId: $updatedUser->roleId,
             statusId: $userData->statusEntityData['status_id']
         );
     }
@@ -88,7 +86,6 @@ final class UserRepository implements UserRepositoryContract
             firstName: $userEntity->firstName,
             lastName: $userEntity->lastName,
             phone: $userEntity->login,
-            roleId: $userEntity->roleId,
             statusId: UserStatus::deleted
         );
     }
@@ -104,7 +101,6 @@ final class UserRepository implements UserRepositoryContract
             firstName: $userEntity->firstName,
             lastName: $userEntity->lastName,
             phone: $userEntity->login,
-            roleId: $userEntity->roleId,
             statusId: UserStatus::deleted
         );
     }
@@ -120,7 +116,6 @@ final class UserRepository implements UserRepositoryContract
             firstName: $userData['first_name'],
             lastName: $userData['last_name'],
             phone: $userData['login'],
-            roleId: $userData['role_id'],
             statusId: $statusData->id
         );
     }
@@ -136,7 +131,6 @@ final class UserRepository implements UserRepositoryContract
             firstName: $userData['first_name'],
             lastName: $userData['last_name'],
             phone: $userData['login'],
-            roleId: $userData['role_id'],
             statusId: $statusData->id
         );
     }
