@@ -49,12 +49,24 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 RUN groupadd -g 1000 www
 RUN useradd -u 1000 -ms /bin/bash -g www www
 
+RUN pecl install xdebug
+RUN echo 'zend_extension=/usr/local/lib/php/extensions/no-debug-non-zts-20160303/xdebug.so' | tee /usr/local/etc/php/conf.d/xdebug.ini \
+    && echo "xdebug.mode=debug" | tee -a /usr/local/etc/php/conf.d/xdebug.ini \
+    && echo "xdebug.start_with_request=yes" | tee -a /usr/local/etc/php/conf.d/xdebug.ini \
+    && echo "xdebug.remote_handler=dbgp" | tee -a /usr/local/etc/php/conf.d/xdebug.ini \
+    && echo "xdebug.remote_port=9000" | tee -a /usr/local/etc/php/conf.d/xdebug.ini \
+    && echo "xdebug.client_host=host.docker.internal" | tee -a /usr/local/etc/php/conf.d/xdebug.ini \
+    && echo "xdebug.remote_connect_back=0" | tee -a /usr/local/etc/php/conf.d/xdebug.ini \
+    && echo "xdebug.idekey=PHPSTORM" | tee -a /usr/local/etc/php/conf.d/xdebug.ini
+
 # Copy existing application directory contents
 #COPY . /var/www
 
 # Copy existing application directory permissions
 #COPY --chown=www:www . /var/www
 COPY --chown=www:www househub_monolith_mvp /var/www/househub_monolith_mvp
+
+COPY --chown=www:www deployment/configs/php.ini /usr/local/etc/php/php.ini
 
 # Some configurations for PHPStan
 RUN echo -e "\n# some instructions for export" >> ~/.bashrc

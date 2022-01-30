@@ -36,6 +36,7 @@ services:
     tty: true
     environment:
       SERVICE_NAME: househub_webserver
+      XDEBUG_CONFIG: remote_host=host.docker.internal
       SERVICE_TAGS: dev
     ports:
       - "80:80"
