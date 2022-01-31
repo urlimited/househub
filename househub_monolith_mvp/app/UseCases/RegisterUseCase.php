@@ -3,9 +3,11 @@
 namespace App\UseCases;
 
 use App\Contracts\Repositories\AuthCodeRepositoryContract;
+use App\Contracts\Repositories\CompanyRepositoryContract;
 use App\Contracts\Repositories\NotificatorRepositoryContract;
 use App\Contracts\Repositories\TokenRepositoryContract;
 use App\Contracts\Repositories\UserRepositoryContract;
+use App\DTO\ServiceCompanyModelDTO;
 use App\DTO\UserModelDTO;
 use App\Enums\CompanyType;
 use App\Enums\Role;
@@ -27,21 +29,21 @@ final class RegisterUseCase
     private AuthCodeRepositoryContract $authCodeRepository;
     private NotificatorRepositoryContract $notificatorRepository;
     private TokenRepositoryContract $tokenRepository;
+    private CompanyRepositoryContract $companyRepository;
 
-    /**
-     * @throws BindingResolutionException
-     */
     public function __construct(
         UserRepositoryContract $userRepository,
         AuthCodeRepositoryContract $authCodeRepository,
         NotificatorRepositoryContract $notificatorRepository,
         TokenRepositoryContract $tokenRepository,
+        CompanyRepositoryContract $companyRepository
     )
     {
         $this->userRepository = $userRepository;
         $this->authCodeRepository = $authCodeRepository;
         $this->notificatorRepository = $notificatorRepository;
         $this->tokenRepository = $tokenRepository;
+        $this->companyRepository = $companyRepository;
     }
 
     /**
