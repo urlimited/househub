@@ -63,6 +63,10 @@ final class RegisterUseCase
         return $user->publish();
     }
 
+    public function registerServiceCompanyUser(array $userData){
+
+    }
+
     /**
      * @param array $companyData
      * @return UseCaseResult

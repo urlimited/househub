@@ -5,6 +5,7 @@ namespace Tests\Feature\http\register;
 use App\Enums\AuthCodeType;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\DB;
+use JetBrains\PhpStorm\NoReturn;
 use Tests\TestCase;
 
 class SendConfirmationPhoneCallTest extends TestCase
@@ -47,4 +48,18 @@ class SendConfirmationPhoneCallTest extends TestCase
     public function testWhenUserIsBlocked() {
 
     }
+
+
+    /**
+     * @covers RegisterController::registerUser
+     * @return void
+     * @testdox User to be registered requested call notification more than five times
+     *          Expected to block the user
+     */
+    #[NoReturn]
+    public function testCallForServiceCompanyUserWasRequestedMore5Times(): void
+    {
+        //TODO: realise test
+    }
+
 }

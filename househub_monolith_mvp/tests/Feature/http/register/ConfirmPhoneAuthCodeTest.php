@@ -5,15 +5,18 @@ namespace Tests\Feature\http\register;
 use App\Enums\TokenType;
 use App\Enums\UserStatus;
 use Illuminate\Support\Facades\DB;
+use JetBrains\PhpStorm\NoReturn;
 use Tests\TestCase;
 
 class ConfirmPhoneAuthCodeTest extends TestCase
 {
     /**
+     * @covers RegisterController::confirmPhoneAuthCode
      * @return void
      * @testdox Standard scenario for user phone confirmation
      */
-    public function testStandardConfirmPhoneAuthCode()
+    #[NoReturn]
+    public function testStandardConfirmPhoneAuthCode(): void
     {
         $data = [
             'phone' => '+77771557027',
@@ -42,5 +45,17 @@ class ConfirmPhoneAuthCodeTest extends TestCase
             'type_id' => TokenType::access,
             'value' => json_decode($response->getContent(), true)['data']['access_token']['value']
         ]);
+    }
+
+    /**
+     * @covers RegisterController::confirmPhoneAuthCode
+     * @return void
+     * @testdox User to be registered filled wrong confirmation code
+     *          Expected to block the user
+     */
+    #[NoReturn]
+    public function testServiceCompanyUserConfirmedWrongNumber(): void
+    {
+        //TODO: realise test
     }
 }

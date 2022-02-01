@@ -35,6 +35,14 @@ final class RegisterController extends Controller
         }
     }
 
+    public function registerUser(RegisterResidentUser $request){
+
+    }
+
+    public function registerCompany(){
+
+    }
+
     public function requestRegistrationForServiceCompany(RequestForServiceCompanyRegister $request): JsonResponse {
         try {
             $this->validateIsHeaderContentTypeApplicationJSON($request);

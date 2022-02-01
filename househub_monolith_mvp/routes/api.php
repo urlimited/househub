@@ -23,9 +23,14 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::get('/users', [RegisterController::class, 'getUsers']);
 
 Route::post('/auth/register', [RegisterController::class, 'registerResidentUser']);
+
 Route::post('/auth/auth_code', [RegisterController::class, 'sendConfirmationPhoneCall']);
 Route::post('/auth/auth_code_confirmation', [RegisterController::class, 'confirmPhoneAuthCode']);
 
 Route::post('/real_estates/apartment', [RealEstateController::class, 'createApartment']);
 Route::post('/real_estates/house', [RealEstateController::class, 'createHouse']);
 Route::post('/real_estates/residential_complex', [RealEstateController::class, 'createResidentialComplex']);
+
+// New REST conventions
+Route::post('/auth/companies/register', [RegisterController::class, 'registerCompany']);
+Route::post('/auth/users/register', [RegisterController::class, 'registerUser']);
