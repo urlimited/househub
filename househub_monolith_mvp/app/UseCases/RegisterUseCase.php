@@ -63,6 +63,15 @@ final class RegisterUseCase
         return $user->publish();
     }
 
+    public function registerUser(array $validatedUserData): array
+    {
+        $validatedUserData['status_id'] = UserStatus::registered;
+
+        $user = $this->userRepository->create(UserModelDTO::repositoryCreateData($validatedUserData));
+
+        return $user->publish();
+    }
+
     public function registerServiceCompanyUser(array $userData){
 
     }

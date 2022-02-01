@@ -23,7 +23,7 @@ final class RegisterController extends Controller
             $useCase = App::make(RegisterUseCase::class);
 
             $result = [
-                'data' => $useCase->registerResidentUser($request->all())
+                'data' => $useCase->registerResidentUser($request->validated())
             ];
 
             return response()->json(data: $result, status: 200);
@@ -35,22 +35,20 @@ final class RegisterController extends Controller
         }
     }
 
-    public function registerUser(RegisterResidentUser $request){
-
-    }
-
-    public function registerCompany(){
-
-    }
-
-    public function requestRegistrationForServiceCompany(RequestForServiceCompanyRegister $request): JsonResponse {
+    /**
+     * @description API endpoint for registering user with type
+     * @param RegisterResidentUser $request
+     * @return JsonResponse
+     */
+    public function registerUser(RegisterResidentUser $request): JsonResponse
+    {
         try {
             $this->validateIsHeaderContentTypeApplicationJSON($request);
 
             $useCase = App::make(RegisterUseCase::class);
 
             $result = [
-                'data' => $useCase->requestForRegistrationServiceCompany($request->all())
+                'data' => $useCase->registerUser($request->validated())
             ];
 
             return response()->json(data: $result, status: 200);
@@ -62,11 +60,38 @@ final class RegisterController extends Controller
         }
     }
 
-    public function registerServiceCompany() {
+    public function registerCompany()
+    {
 
     }
 
-    public function registerServiceCompanyUser() {
+    public function requestRegistrationForServiceCompany(RequestForServiceCompanyRegister $request): JsonResponse
+    {
+        try {
+            $this->validateIsHeaderContentTypeApplicationJSON($request);
+
+            $useCase = App::make(RegisterUseCase::class);
+
+            $result = [
+                'data' => $useCase->requestForRegistrationServiceCompany($request->validated())
+            ];
+
+            return response()->json(data: $result, status: 200);
+        } catch (Exception $e) {
+            return response()->json(data: [
+                'message' => $e->getMessage(),
+                'stack' => $e->getTrace()
+            ], status: 500);
+        }
+    }
+
+    public function registerServiceCompany()
+    {
+
+    }
+
+    public function registerServiceCompanyUser()
+    {
 
     }
 
@@ -77,7 +102,7 @@ final class RegisterController extends Controller
         try {
             $useCase = App::make(RegisterUseCase::class);
 
-            $useCase->sendAuthenticationCall($request->all());
+            $useCase->sendAuthenticationCall($request->validated());
 
             return response()->json(status: 201);
         } catch (MaxAttemptsExceededException $exception) {
@@ -102,7 +127,7 @@ final class RegisterController extends Controller
         try {
             $useCase = App::make(RegisterUseCase::class);
 
-            $result = $useCase->confirmAuthenticationCode($request->all());
+            $result = $useCase->confirmAuthenticationCode($request->validated());
 
             if ($result->status === UseCaseResult::StatusSuccess)
                 return response()->json(data: [

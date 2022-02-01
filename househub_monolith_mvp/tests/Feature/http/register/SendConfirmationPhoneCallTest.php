@@ -13,6 +13,7 @@ class SendConfirmationPhoneCallTest extends TestCase
     use DatabaseTransactions;
 
     /**
+     * @covers RegisterController::sendConfirmationPhoneCall
      * @return void
      * @testdox Standard scenario for resident user registration
      */
@@ -51,7 +52,7 @@ class SendConfirmationPhoneCallTest extends TestCase
 
 
     /**
-     * @covers RegisterController::registerUser
+     * @covers RegisterController::sendConfirmationPhoneCall
      * @return void
      * @testdox User to be registered requested call notification more than five times
      *          Expected to block the user

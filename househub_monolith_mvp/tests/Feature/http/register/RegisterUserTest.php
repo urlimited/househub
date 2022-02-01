@@ -15,7 +15,6 @@ class RegisterUserTest extends TestCase
     use DatabaseTransactions;
 
     /**
-     * A basic test example.
      * @covers RegisterController::registerUser
      * @return void
      * @testdox Standard scenario for service company user registration
@@ -32,7 +31,64 @@ class RegisterUserTest extends TestCase
             'phone' => '+77771557027',
             'email' => 'bobby@brown.com',
             'user_registration_comment' => 'Hey, I am CEO',
-            'role' => Role::serviceCompanyWorker
+            'role_id' => Role::serviceCompanyWorker
+        ];
+
+        // 2. Action
+        $response = $this->json(method: 'post', uri: '/api/auth/users/register', data: $data);
+
+        // 3.1 Assert status
+        $response->assertStatus(200);
+
+        // 3.2 Assert response structure
+        $response->assertJsonStructure([
+            "data" => [
+                "first_name",
+                "last_name",
+                "phone",
+                "email",
+                "role_id",
+                "role",
+                "status_id",
+                "status",
+                "company_id",
+                "company_name"
+            ]
+        ]);
+
+        $userId = json_decode($response->getContent())->data->id;
+
+        // 3.3 Assert action results in DB
+        $this->assertDatabaseHas(table: 'users', data: [
+            "id" => $userId,
+            "first_name" => "Bobby",
+            "last_name" => "Brown",
+            "login" => "+77771557027",
+            "role_id" => Role::serviceCompanyWorker
+        ]);
+
+        $this->assertDatabaseHas(table: 'user_status_histories', data: [
+            "status_id" => UserStatus::registered,
+            "user_id" => $userId
+        ]);
+    }
+
+    /**
+     * @covers RegisterController::registerUser
+     * @return void
+     * @testdox Standard scenario for resident user registration
+     *          Expected to register the user
+     *
+     */
+    public function testStandardRegistrationResidentUserProcess(): void
+    {
+        // 1. Data initialization
+        $data = [
+            'first_name' => 'Bobby',
+            'last_name' => 'Brown',
+            'phone' => '+77771557027',
+            'email' => 'bobby@brown.com',
+            'role_id' => Role::resident
         ];
 
         // 2. Action
@@ -98,7 +154,7 @@ class RegisterUserTest extends TestCase
             'phone' => '+77771557027',
             'email' => 'bobby@brown.com',
             'user_registration_comment' => 'Hey, I am CEO',
-            'role' => Role::serviceCompanyWorker
+            'role_id' => Role::serviceCompanyWorker
         ];
 
         // 2. Action
