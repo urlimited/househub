@@ -9,6 +9,7 @@ use App\Contracts\Repositories\RealEstateRepositoryContract;
 use App\Contracts\Repositories\TokenRepositoryContract;
 use App\Contracts\Repositories\UserRepositoryContract;
 use App\Contracts\Services\TokenServiceContract;
+use App\Exceptions\UnknownGrammarClass;
 use App\Repositories\AuthCodeRepository;
 use App\Repositories\CompanyRepository;
 use App\Repositories\NotificatorRepository;
@@ -16,6 +17,10 @@ use App\Repositories\RealEstateRepository;
 use App\Repositories\TokenRepository;
 use App\Repositories\UserRepository;
 use App\Services\JWTTokenService;
+use Illuminate\Database\Schema\ColumnDefinition;
+use Illuminate\Database\Schema\Grammars\Grammar;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Fluent;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -44,6 +49,18 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        Grammar::macro('typeEfficientUuid', function (Fluent $column) {
+            return match (class_basename(static::class)) {
+                'MySqlGrammar' => sprintf('binary(%d)', $column->length ?? 16),
+                'PostgresGrammar' => 'bytea',
+                'SQLiteGrammar' => 'blob(256)',
+                default => throw new UnknownGrammarClass,
+            };
+        });
+
+        Blueprint::macro('efficientUuid', function ($column): ColumnDefinition {
+            /** @var Blueprint $this */
+            return $this->addColumn('efficientUuid', $column);
+        });
     }
 }

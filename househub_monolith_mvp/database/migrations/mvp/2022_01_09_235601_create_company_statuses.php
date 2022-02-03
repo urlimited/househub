@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 class CreateCompanyStatuses extends Migration
@@ -14,7 +15,7 @@ class CreateCompanyStatuses extends Migration
     public function up()
     {
         Schema::create('company_statuses', function (Blueprint $table) {
-            $table->unsignedInteger('id')->autoIncrement();
+            $table->unsignedInteger('id', 16)->autoIncrement();
             $table->string('name')->nullable(false);
         });
     }

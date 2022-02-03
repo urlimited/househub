@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use App\Enums\Country;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 
 class CitySeeder extends Seeder
 {

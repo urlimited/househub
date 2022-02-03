@@ -5,6 +5,8 @@ namespace Database\Seeders;
 use App\Enums\RealEstateType;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+use Ramsey\Uuid\Uuid;
 
 class ResidentialComplexRealEstateSeeder extends Seeder
 {
@@ -643,13 +645,16 @@ class ResidentialComplexRealEstateSeeder extends Seeder
         ];
 
         foreach ($names as $name) {
-            $residentialComplexId = DB::table('real_estates')->insertGetId([
+            $residentialComplexId = Uuid::fromString(strtolower(Str::orderedUuid()))->getBytes();
+
+            DB::table('real_estates')->insert([
+                'id' => $residentialComplexId,
                 'type_id' => RealEstateType::residentialComplex,
                 'address' => 'ЖК адрес пока не указан',
                 'city_id' => 1
             ]);
 
-            DB::table('real_estate_attributes')->insertGetId([
+            DB::table('real_estate_attributes')->insert([
                 'key' => 'name',
                 'value' => $name,
                 'real_estate_id' => $residentialComplexId

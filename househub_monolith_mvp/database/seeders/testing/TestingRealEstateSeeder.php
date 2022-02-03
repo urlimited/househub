@@ -5,6 +5,8 @@ namespace Database\Seeders\testing;
 use App\Enums\RealEstateType;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+use Ramsey\Uuid\Uuid;
 
 class TestingRealEstateSeeder extends Seeder
 {
@@ -15,9 +17,19 @@ class TestingRealEstateSeeder extends Seeder
      */
     public function run()
     {
+        $realEstateId = DB::table('real_estates')
+            ->select(DB::raw('BIN_TO_UUID(id) as id'))
+            ->where('type_id', RealEstateType::residentialComplex)
+            ->offset(392)
+            ->first()
+            ->id;
+
+        $houseId = Uuid::fromString(Str::orderedUuid())->getBytes();
+
         $realEstates = [
             [
                 'data' => [
+                    'id' => Uuid::fromString(Str::orderedUuid())->getBytes(),
                     'address' => 'Timiryazeva, 28B',
                     'city_id' => 1,
                     'type_id' => RealEstateType::house,
@@ -28,10 +40,11 @@ class TestingRealEstateSeeder extends Seeder
             ],
             [
                 'data' => [
+                    'id' => $houseId,
                     'address' => 'Tlendiyeva, 223',
                     'city_id' => 1,
                     'type_id' => RealEstateType::house,
-                    'parent_id' => 392
+                    'parent_id' => Uuid::fromString($realEstateId)->getBytes()
                 ],
                 'attributes' => [
                     'number' => '223',
@@ -40,10 +53,11 @@ class TestingRealEstateSeeder extends Seeder
             ],
             [
                 'data' => [
+                    'id' => Uuid::fromString(Str::orderedUuid())->getBytes(),
                     'address' => 'Tlendiyeva, 223',
                     'city_id' => 1,
                     'type_id' => RealEstateType::apartment,
-                    'parent_id' => 625
+                    'parent_id' => $houseId
                 ],
                 'attributes' => [
                     'number' => '135',
@@ -54,13 +68,14 @@ class TestingRealEstateSeeder extends Seeder
         ];
 
         foreach ($realEstates as $realEstate) {
-            $realEstateId = DB::table('real_estates')->insertGetId($realEstate['data']);
+            DB::table('real_estates')
+                ->insert($realEstate['data']);
 
             foreach($realEstate['attributes'] as $key => $attr){
                 DB::table('real_estate_attributes')->insert([
                     'key' => $key,
                     'value' => $attr,
-                    'real_estate_id' => $realEstateId
+                    'real_estate_id' => $realEstate['data']['id']
                 ]);
             }
         }
