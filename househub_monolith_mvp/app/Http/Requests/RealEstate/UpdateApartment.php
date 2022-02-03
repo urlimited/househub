@@ -38,9 +38,9 @@ class UpdateApartment extends FormRequest
                 Rule::exists('real_estates', 'id')
                     ->where('type_id', RealEstateType::house)
             ];
-        } else {
-            $rules['house_number'] = 'string';
-            $rules['house_floors_total_number'] = 'integer';
+        } elseif ($this->has('house_number')){
+            $rules['house_number'] = 'required|string';
+            $rules['house_floors_total_number'] = 'required|integer';
         }
 
         if ($this->has('residential_complex_id')) {
