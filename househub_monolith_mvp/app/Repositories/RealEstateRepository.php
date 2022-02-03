@@ -36,9 +36,10 @@ final class RealEstateRepository implements RealEstateRepositoryContract
 
     public function update(RealEstateModelDTO $realEstateData): RealEstate
     {
-        $realEstate = RealEstateEntity::findOrFail($realEstateData->realEstateData['id']);
+        $realEstateId = $realEstateData->realEstateData['id'];
+        $realEstate = RealEstateEntity::findOrFail($realEstateId);
 
-        RealEstateEntity::update($realEstateData->realEstateData);
+        $realEstate->update($realEstateData->realEstateData);
 
         foreach ($realEstateData->realEstateAttributes as $key => $attribute) {
             RealEstateAttributeEntity::updateOrCreate([
@@ -47,8 +48,10 @@ final class RealEstateRepository implements RealEstateRepositoryContract
             ], ['value' => $attribute]);
         }
 
+        $realEstateAttributes = [...collect($realEstate->realEstateAttributes)->pluck('value','key')];
+
         return $this->identifyRealEstate(
-            realEstateAttributes: $realEstateData->realEstateAttributes,
+            realEstateAttributes: $realEstateAttributes,
             realEstate: $realEstate
         );
     }

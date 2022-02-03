@@ -49,4 +49,5 @@ final class ApartmentRealEstate extends RealEstate
             'entrance' => $this->entrance
         ];
     }
+
 }

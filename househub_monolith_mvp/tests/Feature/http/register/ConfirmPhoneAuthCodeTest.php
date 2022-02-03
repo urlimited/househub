@@ -22,7 +22,7 @@ class ConfirmPhoneAuthCodeTest extends TestCase
 
         $userId = DB::table('users')->where('login', $data['phone'])->first()->id;
 
-        $response = $this->json(method: 'post', uri: '/api/auth/auth_code_confirmation', data: $data);
+        $response = $this->json(method: 'post', uri: '/api/auth/auth-code-confirmation', data: $data);
 
         $response->assertStatus(200);
 

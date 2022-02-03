@@ -22,7 +22,7 @@ class CreateApartmentTest extends TestCase
             'entrance' => '1 подъезд'
         ];
 
-        $response = $this->json(method: 'post', uri: '/api/real_estates/apartment', data: $data);
+        $response = $this->json(method: 'post', uri: '/api/real-estates/apartments', data: $data);
 
         $response->assertStatus(200);
 
@@ -75,7 +75,7 @@ class CreateApartmentTest extends TestCase
             'apartment_number' => '136A'
         ];
 
-        $response = $this->json(method: 'post', uri: '/api/real_estates/apartment', data: $data);
+        $response = $this->json(method: 'post', uri: '/api/real-estates/apartments', data: $data);
 
         $response->assertStatus(200);
 

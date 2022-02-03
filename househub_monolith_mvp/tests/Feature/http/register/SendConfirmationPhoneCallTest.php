@@ -23,7 +23,7 @@ class SendConfirmationPhoneCallTest extends TestCase
 
         $userId = DB::table('users')->where('login', $data['phone'])->first()->id;
 
-        $response = $this->json(method: 'post', uri: '/api/auth/auth_code', data: $data);
+        $response = $this->json(method: 'post', uri: '/api/auth/auth-code', data: $data);
 
         $response->assertStatus(201);
 

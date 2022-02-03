@@ -68,4 +68,32 @@ final class RealEstateUseCase
                 ->publish()
         );
     }
+
+    public function updateApartmentRealEstate(array $realEstateData, int $id): UseCaseResult
+    {
+        $realEstateData['id'] = $id;
+
+        if (key_exists('residential_complex_name', $realEstateData)) {
+            $residentialComplex = $this->realEstateRepository
+                ->create(ResidentialComplexRealEstateModelDTO::repositoryCreateData($realEstateData));
+
+            $realEstateData['residential_complex_id'] = $residentialComplex->id;
+        }
+
+
+        if (key_exists('house_number', $realEstateData)) {
+            $house = $this->realEstateRepository
+                ->create(HouseRealEstateModelDTO::repositoryCreateData($realEstateData));
+
+            $realEstateData['house_id'] = $house->id;
+        }
+
+        return new UseCaseResult(
+            status: UseCaseResult::StatusSuccess,
+            content: $this->realEstateRepository
+                ->update(ApartmentRealEstateModelDTO::repositoryUpdateData($realEstateData))
+                ->publish()
+        );
+
+    }
 }
